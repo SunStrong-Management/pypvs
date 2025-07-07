@@ -1,0 +1,18 @@
+"""Model for an PVS."""
+
+from dataclasses import dataclass, field
+from typing import Any
+
+from .inverter import PVSInverter
+# from .meters import PVSMeterData
+
+@dataclass(slots=True)
+class PVSData:
+    """Model for a PVS6."""
+    gateway: dict[str, Any] = field(default_factory=dict)
+
+    inverters: dict[str, PVSInverter] = field(default_factory=dict)
+    # Raw data is exposed so we can __eq__ the data to see if
+    # anything has changed and consumers of the library can
+    # avoid dispatching data if nothing has changed.
+    raw: dict[str, Any] = field(default_factory=dict)

@@ -1,2 +1,36 @@
 # pypvs
-Python PVS local interface
+
+`pypvs` is a Python package that exposes data and commands for a Sunpower PVS6 gateway
+
+## Installation
+
+You can install it using pip:
+```
+pip install pypvs
+```
+
+# Running the examples
+
+Initialize virtual environment and install requirements
+```
+virtualenv venv
+. venv/bin/activate
+pip install -r requirements.txt
+```
+
+Install `pypvs` in development mode
+```
+python setup.py develop
+```
+
+Then run the example scripts
+```
+python examples/simple_fcgi_async.py
+
+python examples/simple_pvs_async.py
+```
+
+# Access to the PVS via varserver
+
+Please refer to [LocalAPI documentation](doc/LocalAPI.md) for details on accessing the PVS via varserver.
+
