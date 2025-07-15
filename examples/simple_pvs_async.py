@@ -29,7 +29,7 @@ async def main():
     host = "192.168.11.29"
 
     async with aiohttp.ClientSession() as session:
-        pvs = PVS(session=session, host=host, user="spwr_owner")
+        pvs = PVS(session=session, host=host, user="ssm_owner")
         try:
             await pvs.discover()
             pvs_serial = pvs.serial_number

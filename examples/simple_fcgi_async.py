@@ -14,9 +14,9 @@ logging.basicConfig(level=logging.DEBUG)
 async def main():
     async with aiohttp.ClientSession() as session:
         pvs_serial = "ZT190885000549A1562"
-        # The username is: spwr_owner
+        # The username is: ssm_owner
         # The password is: the last 5 characters of the PVS serial number
-        client = PVSFCGIClient(session, auth_user="spwr_owner", auth_password=pvs_serial[-5:])
+        client = PVSFCGIClient(session, auth_user="ssm_owner", auth_password=pvs_serial[-5:])
         client.pvs_url = "https://192.168.11.29"
 
         # Use basic authentication with the username and password

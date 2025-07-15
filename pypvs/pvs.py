@@ -38,7 +38,7 @@ def get_updaters() -> list[type[PVSUpdater]]:
 
 
 class PVS:
-    def __init__(self, session, host=None, user="spwr_owner", password=None):
+    def __init__(self, session, host=None, user="ssm_owner", password=None):
         self._host: str | None = None
         self._common_properties: CommonProperties = CommonProperties()
 
