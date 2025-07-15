@@ -30,7 +30,7 @@ Use of this interface is at your own risk.  SunStrong Management is releasing th
 For most users, the PyPVS library and HA plugin will be sufficient to get started, but for those interested in the more technical details of the API, read on….
 
 ### Authentication
-Before accessing data, users must authenticate against the PVS using a username and password.  The username is: spwr_owner
+Before accessing data, users must authenticate against the PVS using a username and password.  The username is: ssm_owner
 The password is: the last 5 characters of the PVS serial number
 
 Upon successful login, the requester receives an access token which is then delivered (via a cookie) to the PVS in subsequent data queries.  
@@ -62,7 +62,7 @@ The `jq` utility is used to format the response into a more readable format
 
 #### Authentication - login
 ```
-$ auth=`echo -n "spwr_owner:$pwd" | base64`
+$ auth=`echo -n "ssm_owner:$pwd" | base64`
 $ curl -k \
        -b cookies.txt \
        -c cookies.txt \
