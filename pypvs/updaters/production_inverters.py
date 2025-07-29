@@ -31,8 +31,21 @@ class PVSProductionInvertersUpdater(PVSUpdater):
         """Update the PVS for this updater."""
         inverters_dict: list[dict[str, Any]] = await self._request_vars(VARS_MATCH_INVERTERS)
 
-        # construct a list from the provided dictionary, we don't need the paths
-        inverters_data = [inverter for inverter in inverters_dict.values()]
+        # construct a list of inverters from the provided dictionary, drop all parent path
+        inverters_grouped = {}
+        for key, val in inverters_dict.items():
+            # Extract the inverter index from the name, e.g., '0' from '/sys/devices/inverter/0/freqHz'
+            parts = key.split("/")
+            if len(parts) >= 5:
+                idx = int(parts[4])
+                param = parts[5]
+                if idx not in inverters_grouped:
+                    inverters_grouped[idx] = {param: val}
+                else:
+                    inverters_grouped[idx][param] = val
+
+        # Convert to a list sorted by index
+        inverters_data = [inverters_grouped[idx] for idx in sorted(inverters_grouped.keys(), key=int)]
 
         pvs_data.raw[VARS_MATCH_INVERTERS] = inverters_data
         pvs_data.inverters = {
