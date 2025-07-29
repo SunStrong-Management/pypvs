@@ -142,8 +142,8 @@ class PVS:
                 supported_features |= updater_features
                 updaters.append(klass)
 
-        if not supported_features & SupportedFeatures.INVERTERS:
-            raise PVSProbeFailed("Unable to find any inverters on the PVS")
+        if not supported_features & SupportedFeatures.GATEWAY:
+            raise PVSProbeFailed("Unable to find gateway information")
 
         self._updaters = updaters
         self._supported_features = supported_features

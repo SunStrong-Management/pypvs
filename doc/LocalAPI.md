@@ -48,7 +48,7 @@ Two data output formats are currently supported:
 ### Available data points
 This list is subject to change, and we will most likely not be updating it regularly.  To check the data points available on your system, run a match query, but beware this will generate a lot of data.
 
-Check the attached file [Varserver Variables](varserver-variables-open-source.csv) for the list of currenlty accessible variables.
+Check the attached file [Varserver Variables](varserver-variables-public.csv) for the list of currenlty accessible variables.
 
 ### Examples
 All the examples are shown below using curl to demonstrate the API features.

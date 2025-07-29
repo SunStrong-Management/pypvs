@@ -6,12 +6,11 @@ with open("README.md") as readme_file:
     readme = readme_file.read()
 
 setup(
-    author="Sunpower Titanic Orchestra",
-    author_email="email@example.com",
+    author="Aleksandar Mitev @ SunStrong Management",
+    author_email="amitev@sunstrongmanagement.com",
     python_requires=">=3.6",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
-        "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
         "Programming Language :: Python :: 3",
     ],
@@ -25,7 +24,7 @@ setup(
     name="pypvs",
     packages=find_packages(),
     setup_requires=[],
-    url="https://github.com/GitHubUser/pypvs",
-    version="0.1.0",
+    url="https://github.com/SunStrong-Management/pypvs.git",
+    version="0.1.1",
     zip_safe=False,
 )

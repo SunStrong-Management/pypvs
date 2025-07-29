@@ -1,8 +1,8 @@
 import enum
 
 # System Production
-VARS_MATCH_INVERTERS = "/inverter/data"
-VARS_MATCH_METERS = "/meter/data"
+VARS_MATCH_INVERTERS = "/sys/devices/inverter/"
+VARS_MATCH_METERS = "/sys/devices/meter/"
 VARS_MATCH_INFO = "/sys/info"
 VAR_UPTIME = "/sys/info/uptime"
 
