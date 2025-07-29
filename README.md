@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 Install `pypvs` in development mode
 ```
-python setup.py develop
+pip install -e .
 ```
 
 Then run the example scripts
