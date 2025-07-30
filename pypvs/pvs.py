@@ -11,6 +11,7 @@ from .const import SupportedFeatures, VAR_UPTIME
 from .updaters.base import PVSUpdater
 from .updaters.gateway import PVSGatewayUpdater
 from .updaters.production_inverters import PVSProductionInvertersUpdater
+from .updaters.meter import PVSProductionMetersUpdater
 
 from .models.common import CommonProperties
 from .models.pvs import PVSData
@@ -18,7 +19,8 @@ from .models.pvs import PVSData
 
 UPDATERS: list[type["PVSUpdater"]] = [
     PVSGatewayUpdater,
-    PVSProductionInvertersUpdater
+    PVSProductionInvertersUpdater,
+    PVSProductionMetersUpdater
 ]
 
 _LOGGER = logging.getLogger(__name__)
