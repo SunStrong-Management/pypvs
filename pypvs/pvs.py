@@ -12,6 +12,8 @@ from .updaters.base import PVSUpdater
 from .updaters.gateway import PVSGatewayUpdater
 from .updaters.production_inverters import PVSProductionInvertersUpdater
 from .updaters.meter import PVSProductionMetersUpdater
+from .updaters.ess import PVSESSUpdater
+from .updaters.transfer_switch import PVSTransferSwitchUpdater
 
 from .models.common import CommonProperties
 from .models.pvs import PVSData
@@ -20,7 +22,9 @@ from .models.pvs import PVSData
 UPDATERS: list[type["PVSUpdater"]] = [
     PVSGatewayUpdater,
     PVSProductionInvertersUpdater,
-    PVSProductionMetersUpdater
+    PVSProductionMetersUpdater,
+    PVSESSUpdater,
+    PVSTransferSwitchUpdater
 ]
 
 _LOGGER = logging.getLogger(__name__)
