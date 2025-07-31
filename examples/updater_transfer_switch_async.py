@@ -5,7 +5,7 @@ import asyncio
 import aiohttp
 
 from pypvs.pvs import PVS
-from pypvs.updaters.production_inverters import PVSProductionInvertersUpdater
+from pypvs.updaters.transfer_switch import PVSTransferSwitchUpdater
 from pypvs.models.pvs import PVSData
 from pypvs.models.common import CommonProperties
 from pypvs.const import SupportedFeatures
@@ -32,22 +32,22 @@ async def main():
             return
 
         common_properties = CommonProperties()
-        inverter_updater = PVSProductionInvertersUpdater(pvs.getVarserverVar, pvs.getVarserverVars, common_properties)
+        transfer_switch_updater = PVSTransferSwitchUpdater(pvs.getVarserverVar, pvs.getVarserverVars, common_properties)
 
         discovered_features = SupportedFeatures(0)
-        inverter_is_there = await inverter_updater.probe(discovered_features)
-        if not inverter_is_there:
-            print("No inverters found for that PVS on varserver")
+        transfer_switch_is_there = await transfer_switch_updater.probe(discovered_features)
+        if not transfer_switch_is_there:
+            print("No MIDC found for that PVS on varserver")
             return
 
         # setup a periodic task to fetch data every 5 seconds
         pvs_data = PVSData()
         while True:
-            await inverter_updater.update(pvs_data)
+            await transfer_switch_updater.update(pvs_data)
 
-            print(">>>>>> Inverters:")
-            for inverter in pvs_data.inverters.values():
-                print(f"{inverter.serial_number}: {inverter}")
+            print(">>>>>> MIDC:")
+            for switch in pvs_data.transfer_switches.values():
+                print(f"{switch.serial_number}: {switch}")
 
             await asyncio.sleep(5)
 

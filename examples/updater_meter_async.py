@@ -5,7 +5,7 @@ import asyncio
 import aiohttp
 
 from pypvs.pvs import PVS
-from pypvs.updaters.production_inverters import PVSProductionInvertersUpdater
+from pypvs.updaters.meter import PVSProductionMetersUpdater
 from pypvs.models.pvs import PVSData
 from pypvs.models.common import CommonProperties
 from pypvs.const import SupportedFeatures
@@ -32,22 +32,22 @@ async def main():
             return
 
         common_properties = CommonProperties()
-        inverter_updater = PVSProductionInvertersUpdater(pvs.getVarserverVar, pvs.getVarserverVars, common_properties)
+        meter_updater = PVSProductionMetersUpdater(pvs.getVarserverVar, pvs.getVarserverVars, common_properties)
 
         discovered_features = SupportedFeatures(0)
-        inverter_is_there = await inverter_updater.probe(discovered_features)
-        if not inverter_is_there:
-            print("No inverters found for that PVS on varserver")
+        meter_is_there = await meter_updater.probe(discovered_features)
+        if not meter_is_there:
+            print("No meters found for that PVS on varserver")
             return
 
         # setup a periodic task to fetch data every 5 seconds
         pvs_data = PVSData()
         while True:
-            await inverter_updater.update(pvs_data)
+            await meter_updater.update(pvs_data)
 
-            print(">>>>>> Inverters:")
-            for inverter in pvs_data.inverters.values():
-                print(f"{inverter.serial_number}: {inverter}")
+            print(">>>>>> Meters:")
+            for meter in pvs_data.meters.values():
+                print(f"{meter.serial_number}: {meter}")
 
             await asyncio.sleep(5)
 
