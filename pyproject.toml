@@ -1,3 +1,32 @@
 [build-system]
 requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "pypvs"
+version = "0.1.3"
+authors = [
+  { name="Aleksandar Mitev", email="amitev@sunstrongmanagement.com" }
+]
+description = "A Python package that exposes data and commands for a Sunpower PVS6 gateway."
+readme = "README.md"
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+    "aiohttp"
+]
+
+[project.urls]
+Homepage = "https://github.com/SunStrong-Management/pypvs"
+Issues = "https://github.com/SunStrong-Management/pypvs/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools]
+include-package-data = true
