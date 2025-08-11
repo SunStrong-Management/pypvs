@@ -19,3 +19,8 @@ __all__ = (
     "PVSAuthenticationError",
     "PVSInverter",
 )
+
+try:
+    from ._version import __version__
+except Exception:  # fallback in weird environments
+    __version__ = "0+unknown"
