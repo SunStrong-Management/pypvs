@@ -1,0 +1,39 @@
+name: Publish to PyPI
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out with full history (for setuptools_scm)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # ensures tags are available
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tools
+        run: |
+          python -m pip install -U pip
+          python -m pip install -U build
+
+      - name: Build the package
+        run: python -m build
+
+      - name: Publish to PyPI (Trusted Publishing)
+        # ensure that GH was added as a trusted publisher in PiPY
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # comment out when not testing on TestPyPI
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
+

@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=64", "wheel"]
+requires = ["setuptools>=68", "setuptools-scm>=8", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pypvs"
-version = "0.1.3"
+dynamic = ["version"]
 authors = [
   { name="Aleksandar Mitev", email="amitev@sunstrongmanagement.com" }
 ]
@@ -30,3 +30,9 @@ where = ["src"]
 
 [tool.setuptools]
 include-package-data = true
+
+[tool.setuptools_scm]
+# writes a file with __version__ so runtime can read it even from sdists
+write_to = "src/pypvs/_version.py"
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
