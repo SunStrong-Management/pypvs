@@ -33,7 +33,7 @@ jobs:
         # ensure that GH was added as a trusted publisher in PiPY
         uses: pypa/gh-action-pypi-publish@release/v1
         # comment out when not testing on TestPyPI
-        with:
-          repository-url: https://test.pypi.org/legacy/
-          skip-existing: true
+        # with:
+        #   repository-url: https://test.pypi.org/legacy/
+        #   skip-existing: true
 
