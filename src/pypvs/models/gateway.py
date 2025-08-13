@@ -27,7 +27,7 @@ class PVSGateway:
 
         return cls(
             model=data["/sys/info/sys_type"].strip(),
-            hardware_version=data["/sys/info/model"]+data["/sys/info/hwrev"],
+            hardware_version=data["/sys/info/model"] + " " + data["/sys/info/hwrev"],
             software_version=data["/sys/info/sw_rev"],
             uptime_s=data["/sys/info/uptime"],
             mac=data["/sys/info/lmac"],
