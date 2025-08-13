@@ -8,7 +8,7 @@ dynamic = ["version"]
 authors = [
   { name="Aleksandar Mitev", email="amitev@sunstrongmanagement.com" }
 ]
-description = "A Python package that exposes data and commands for a Sunpower PVS6 gateway."
+description = "A Python package that exposes data and commands for a SunStrong Management PVS6 gateway."
 readme = "README.md"
 requires-python = ">=3.6"
 classifiers = [
