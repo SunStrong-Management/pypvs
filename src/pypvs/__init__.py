@@ -1,4 +1,4 @@
-"""Python wrapper for Sunpower PVS API."""
+"""Python wrapper for SunStrong Management PVS API."""
 
 from .pvs import PVS
 from .exceptions import (

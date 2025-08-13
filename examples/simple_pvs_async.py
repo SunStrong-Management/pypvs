@@ -1,5 +1,5 @@
 # This is an example of how to use the PVS class to get data
-# from a Sunpower PVS6 gateway using asyncio.
+# from a SunStrong Management PVS6 gateway using asyncio.
 #
 
 import time

@@ -1,6 +1,6 @@
 # pypvs
 
-`pypvs` is a Python package that exposes data and commands for a Sunpower PVS6 gateway
+`pypvs` is a Python package that exposes data and commands for a SunStrong Management PVS6 gateway
 
 ## Installation
 

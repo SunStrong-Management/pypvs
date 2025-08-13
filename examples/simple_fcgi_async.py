@@ -1,5 +1,5 @@
 # This example demonstrates how to use the PVSFCGIClient class to
-# interact with a Sunpower PVS6 gateway using basic authentication.
+# interact with a SunStrong Management PVS6 gateway using basic authentication.
 #
 
 import asyncio
