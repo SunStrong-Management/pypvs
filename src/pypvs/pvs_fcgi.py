@@ -76,6 +76,10 @@ class PVSFCGIClient:
             _LOGGER.info(f"Login successful! with cookies: {self.cookies}")
 
     async def _post_internal(self, url, payload_str):
+        # Cookies seem to be added implicitly, so need to clear them for a new PVS
+        # https://docs.aiohttp.org/en/stable/client_advanced.html#cookie-jar
+        self.session.cookie_jar.clear()
+
         # TODO: Ignore certificate errors for now
         async with self.session.post(
             url, cookies=self.cookies, data=payload_str, ssl=False
