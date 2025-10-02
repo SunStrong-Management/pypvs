@@ -60,6 +60,8 @@ in all the examples below:
 
 The `jq` utility is used to format the response into a more readable format
 
+Please check https://github.com/tjmonk/fcgi_vars for more details about the API.
+
 #### Authentication - login
 ```
 $ auth=`echo -n "ssm_owner:$pwd" | base64`
@@ -104,6 +106,24 @@ $ curl -s \
     }
   ],
   "count": 2
+}
+```
+
+#### Set a variable by name
+```
+$ curl -s \
+       -k \
+       -b cookies.txt \
+       -c cookies.txt \
+       https://$ip/vars?set=/sys/telemetryws/enable=1 | jq
+{
+  "values": [
+    {
+      "name": "/sys/telemetryws/enable",
+      "value": "1"
+    }
+  ],
+  "count": 1
 }
 ```
 
