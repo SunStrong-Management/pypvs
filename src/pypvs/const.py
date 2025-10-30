@@ -8,6 +8,7 @@ VARS_MATCH_TRANSFER_SWITCH = "/sys/devices/transfer_switch/"
 VARS_MATCH_INFO = "/sys/info"
 VAR_UPTIME = "/sys/info/uptime"
 
+
 class SupportedFeatures(enum.IntFlag):
     """Features available from the PVS. Features form a bitmask."""
 
@@ -17,9 +18,11 @@ class SupportedFeatures(enum.IntFlag):
     ESS = 8  #: PVS reports energy storage system
     TRANSFER_SWITCH = 16  #: PVS reports transfer switch
 
+
 # TODO: fix until moved to Python 3.11
 class StrEnum(str, enum.Enum):
     """Enum with string values."""
+
     pass
 
 

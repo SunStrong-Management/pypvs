@@ -12,7 +12,7 @@ _LOGGER = logging.getLogger(__name__)
 
 class PVSTransferSwitchUpdater(PVSUpdater):
     """Class to handle updates for transfer switch data."""
-    
+
     async def probe(
         self, discovered_features: SupportedFeatures
     ) -> SupportedFeatures | None:
@@ -21,7 +21,9 @@ class PVSTransferSwitchUpdater(PVSUpdater):
             await self._request_vars(VARS_MATCH_TRANSFER_SWITCH)
         except ENDPOINT_PROBE_EXCEPTIONS as e:
             _LOGGER.debug(
-                "No transfer switches found on varserver filter %s: %s", VARS_MATCH_TRANSFER_SWITCH, e
+                "No transfer switches found on varserver filter %s: %s",
+                VARS_MATCH_TRANSFER_SWITCH,
+                e,
             )
             return None
         self._supported_features |= SupportedFeatures.TRANSFER_SWITCH
@@ -30,7 +32,9 @@ class PVSTransferSwitchUpdater(PVSUpdater):
     async def update(self, pvs_data: PVSData) -> None:
         """Update the PVS for this updater."""
         try:
-            transfer_switches_dict: list[dict[str, Any]] = await self._request_vars(VARS_MATCH_TRANSFER_SWITCH)
+            transfer_switches_dict: list[dict[str, Any]] = await self._request_vars(
+                VARS_MATCH_TRANSFER_SWITCH
+            )
         except Exception as e:
             _LOGGER.error("Failed to request transfer switch vars: %s", e)
             return
@@ -50,7 +54,10 @@ class PVSTransferSwitchUpdater(PVSUpdater):
                         transfer_switches_grouped[idx][param] = val
 
             # Convert to a list sorted by index
-            transfer_switches_data = [transfer_switches_grouped[idx] for idx in sorted(transfer_switches_grouped.keys(), key=int)]
+            transfer_switches_data = [
+                transfer_switches_grouped[idx]
+                for idx in sorted(transfer_switches_grouped.keys(), key=int)
+            ]
         except Exception as e:
             _LOGGER.error("Failed to process transfer switch data: %s", e)
             return

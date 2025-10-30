@@ -30,7 +30,9 @@ class PVSProductionMetersUpdater(PVSUpdater):
     async def update(self, pvs_data: PVSData) -> None:
         """Update the PVS for this updater."""
         try:
-            meters_dict: list[dict[str, Any]] = await self._request_vars(VARS_MATCH_METERS)
+            meters_dict: list[dict[str, Any]] = await self._request_vars(
+                VARS_MATCH_METERS
+            )
         except Exception as e:
             _LOGGER.error("Failed to request meter vars: %s", e)
             return
@@ -50,13 +52,14 @@ class PVSProductionMetersUpdater(PVSUpdater):
                         meters_grouped[idx][param] = val
 
             # Convert to a list sorted by index
-            meters_data = [meters_grouped[idx] for idx in sorted(meters_grouped.keys(), key=int)]
+            meters_data = [
+                meters_grouped[idx] for idx in sorted(meters_grouped.keys(), key=int)
+            ]
         except Exception as e:
             _LOGGER.error("Failed to process meter data: %s", e)
             return
 
         pvs_data.raw[VARS_MATCH_METERS] = meters_data
         pvs_data.meters = {
-            meter["sn"]: PVSMeter.from_varserver(meter)
-            for meter in meters_data
+            meter["sn"]: PVSMeter.from_varserver(meter) for meter in meters_data
         }

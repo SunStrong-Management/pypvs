@@ -20,9 +20,7 @@ class PVSESSUpdater(PVSUpdater):
         try:
             await self._request_vars(VARS_MATCH_ESS)
         except ENDPOINT_PROBE_EXCEPTIONS as e:
-            _LOGGER.debug(
-                "No ESS found on varserver filter %s: %s", VARS_MATCH_ESS, e
-            )
+            _LOGGER.debug("No ESS found on varserver filter %s: %s", VARS_MATCH_ESS, e)
             return None
         self._supported_features |= SupportedFeatures.ESS
         return self._supported_features
@@ -56,7 +54,4 @@ class PVSESSUpdater(PVSUpdater):
             return
 
         pvs_data.raw[VARS_MATCH_ESS] = ess_data
-        pvs_data.ess = {
-            ess["sn"]: PVSESS.from_varserver(ess)
-            for ess in ess_data
-        }
+        pvs_data.ess = {ess["sn"]: PVSESS.from_varserver(ess) for ess in ess_data}

@@ -28,7 +28,9 @@ class PVSInverter:
 
         # Convert date from format "2024-09-30T16:15:00Z" to UTC seconds
         date_str = data["msmtEps"]
-        dt = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+        dt = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ").replace(
+            tzinfo=timezone.utc
+        )
         last_report_date = int(dt.timestamp())
 
         return cls(

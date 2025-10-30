@@ -30,7 +30,9 @@ class PVSProductionInvertersUpdater(PVSUpdater):
     async def update(self, pvs_data: PVSData) -> None:
         """Update the PVS for this updater."""
         try:
-            inverters_dict: list[dict[str, Any]] = await self._request_vars(VARS_MATCH_INVERTERS)
+            inverters_dict: list[dict[str, Any]] = await self._request_vars(
+                VARS_MATCH_INVERTERS
+            )
         except Exception as e:
             _LOGGER.error("Failed to request inverter vars: %s", e)
             return
@@ -50,7 +52,10 @@ class PVSProductionInvertersUpdater(PVSUpdater):
                         inverters_grouped[idx][param] = val
 
             # Convert to a list sorted by index
-            inverters_data = [inverters_grouped[idx] for idx in sorted(inverters_grouped.keys(), key=int)]
+            inverters_data = [
+                inverters_grouped[idx]
+                for idx in sorted(inverters_grouped.keys(), key=int)
+            ]
         except Exception as e:
             _LOGGER.error("Failed to process inverter data: %s", e)
             return

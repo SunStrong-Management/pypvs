@@ -8,9 +8,11 @@ from .meter import PVSMeter
 from .ess import PVSESS
 from .transfer_switch import PVSTransferSwitch
 
+
 @dataclass(slots=True)
 class PVSData:
     """Model for a PVS6."""
+
     gateway: dict[str, Any] = field(default_factory=dict)
 
     inverters: dict[str, PVSInverter] = field(default_factory=dict)

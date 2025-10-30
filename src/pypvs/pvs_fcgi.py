@@ -3,11 +3,14 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
+
 class PVSFCGIClientLoginError(Exception):
-    """ Exception raised when login to the PVS fails """
+    """Exception raised when login to the PVS fails"""
+
 
 class PVSFCGIClientPostError(Exception):
-    """ Exception raised when POST request to the PVS fails """
+    """Exception raised when POST request to the PVS fails"""
+
 
 class PVSFCGIClient:
     def __init__(self, session, auth_user=None, auth_password=None):
@@ -30,12 +33,8 @@ class PVSFCGIClient:
 
     def set_pvs_details(self, details):
         # check all fields are present
-        if not all(
-            key in details for key in ["serial"]
-        ):
-            raise ValueError(
-                "PVS details must contain serial"
-            )
+        if not all(key in details for key in ["serial"]):
+            raise ValueError("PVS details must contain serial")
 
         self.pvs_details = details
         _LOGGER.info(f"PVS details set: {self.pvs_details}")
@@ -90,7 +89,9 @@ class PVSFCGIClient:
                 _LOGGER.debug("POST request successful!")
                 return await response.json()
             elif response.status in [400, 401, 500]:
-                raise PVSFCGIClientLoginError("Unauthorized access (missing cookie). Retry login!")
+                raise PVSFCGIClientLoginError(
+                    "Unauthorized access (missing cookie). Retry login!"
+                )
             else:
                 raise PVSFCGIClientPostError(
                     f"POST request failed with status code: {response.status}"
@@ -112,7 +113,9 @@ class PVSFCGIClient:
             - Response data in JSON format if successful.
         """
         if not self._pvs_url:
-            raise PVSFCGIClientPostError("PVS URL must be set before making POST requests.")
+            raise PVSFCGIClientPostError(
+                "PVS URL must be set before making POST requests."
+            )
 
         url = f"{self._pvs_url}{endpoint}"
         payload_str = "".join([f"{key}={value}" for key, value in params.items()])

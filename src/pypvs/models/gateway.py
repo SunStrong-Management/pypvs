@@ -23,7 +23,7 @@ class PVSGateway:
 
     @classmethod
     def from_varserver(cls, data: dict[str, Any]) -> PVSGateway:
-        """Initialize from a /sys/info varserver variables """
+        """Initialize from a /sys/info varserver variables"""
 
         return cls(
             model=data["/sys/info/sys_type"].strip(),
