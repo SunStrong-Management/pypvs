@@ -37,7 +37,8 @@ class PVSESSUpdater(PVSUpdater):
             # construct a list of ESS from the provided dictionary, drop all parent path
             ess_grouped = {}
             for key, val in ess_dict.items():
-                # Extract the ESS index from the name, e.g., '0' from '/sys/devices/ess/0/opMode'
+                # Extract the ESS index from the name, e.g., '0'
+                # from '/sys/devices/ess/0/opMode'
                 parts = key.split("/")
                 if len(parts) >= 5:
                     idx = int(parts[4])

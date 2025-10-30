@@ -38,10 +38,12 @@ class PVSProductionInvertersUpdater(PVSUpdater):
             return
 
         try:
-            # construct a list of inverters from the provided dictionary, drop all parent path
+            # construct a list of inverters from the provided dictionary,
+            # drop all parent path
             inverters_grouped = {}
             for key, val in inverters_dict.items():
-                # Extract the inverter index from the name, e.g., '0' from '/sys/devices/inverter/0/freqHz'
+                # Extract the inverter index from the name, e.g., '0'
+                # from '/sys/devices/inverter/0/freqHz'
                 parts = key.split("/")
                 if len(parts) >= 5:
                     idx = int(parts[4])

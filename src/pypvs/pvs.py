@@ -90,7 +90,16 @@ class PVS:
         response_data = await self.getVarserver("/vars", params={"name": varname})
 
         try:
-            # sample return: {'values': [{'name': '/sys/info/uptime', 'value': '106408.20'}], 'count': 1}
+            # sample return:
+            # {
+            #     "count": 1,
+            #     "values": [
+            #     {
+            #         "name": "/sys/info/uptime",
+            #         "value": "106408.20"
+            #     }
+            #     ]
+            # }
             value = response_data["values"][0]["value"]
             _LOGGER.debug(f"Received {varname}: {value}")
             return response_data["values"][0]["value"]
@@ -103,7 +112,8 @@ class PVS:
         response_data = await self.getVarserver("/vars", params={"match": match})
 
         try:
-            # construct a new dictionary with the varname as the key and the value as the value
+            # construct a new dictionary with the varname
+            # as the key and the value as the value
             value_dict = {}
             for item in response_data["values"]:
                 value_dict[item["name"]] = item["value"]
@@ -129,7 +139,7 @@ class PVS:
 
         try:
             await self.getVarserverVar(VAR_UPTIME)
-        except PVSFCGIClientPostError as e:
+        except PVSFCGIClientPostError:
             raise PVSAuthenticationError("Login failed on setup")
 
     def generate_client_reference_id(self):
@@ -145,7 +155,8 @@ class PVS:
         client_reference_id = base64.b64encode(
             f"{self._firmware.serial}:{self._token_secret}".encode()
         ).decode()
-        # finally apply a workaround for the base64 encoding to be accepter by the server
+        # finally apply a workaround for the base64
+        # encoding to be accepter by the server
         return client_reference_id.replace("=", "-")
 
     async def validate(self) -> bool:

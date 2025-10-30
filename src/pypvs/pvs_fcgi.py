@@ -68,7 +68,8 @@ class PVSFCGIClient:
         async with self.session.get(login_url, headers=headers, ssl=False) as response:
             if response.status != 200:
                 raise PVSFCGIClientLoginError(
-                    f"Login failed with status code: {response.status} and response: {response.text}"
+                    f"Login failed with status code: {response.status}"
+                    f" and response: {response.text}"
                 )
 
             self.cookies = response.cookies
@@ -84,7 +85,8 @@ class PVSFCGIClient:
             url, cookies=self.cookies, data=payload_str, ssl=False
         ) as response:
             response_text = await response.text()
-            # FIXME: The server retunrs 500 or 200 with empty response when the session is invalid
+            # FIXME: The server returns 500 or 200 with empty response when
+            # the session is invalid
             if response.status == 200:
                 _LOGGER.debug("POST request successful!")
                 return await response.json()
@@ -120,7 +122,8 @@ class PVSFCGIClient:
         url = f"{self._pvs_url}{endpoint}"
         payload_str = "".join([f"{key}={value}" for key, value in params.items()])
         _LOGGER.debug(
-            f"POST request to {url} with payload: {payload_str} and cookies: {self.cookies}"
+            f"POST request to {url} with payload: {payload_str} "
+            f"and cookies: {self.cookies}"
         )
 
         # First try our luck if the session is still valid

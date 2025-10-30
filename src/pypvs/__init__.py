@@ -18,6 +18,7 @@ __all__ = (
     "PVS",
     "PVSError",
     "PVSCommunicationError",
+    "PVSDataFormatError",
     "PVSFirmwareCheckError",
     "PVSAuthenticationError",
     "PVSInverter",

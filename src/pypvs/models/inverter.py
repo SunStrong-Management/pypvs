@@ -23,7 +23,9 @@ class PVSInverter:
 
     @classmethod
     def from_varserver(cls, data: dict[str, Any]) -> PVSInverter:
-        """Initialize from /sys/devices/inverter/*/* varserver variables packed in JSON."""
+        """
+        Initialize from /sys/devices/inverter/*/* varserver variables packed in JSON.
+        """
 
         # Convert date from format "2024-09-30T16:15:00Z" to UTC seconds
         date_str = data["msmtEps"]

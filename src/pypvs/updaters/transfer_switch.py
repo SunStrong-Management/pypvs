@@ -40,10 +40,12 @@ class PVSTransferSwitchUpdater(PVSUpdater):
             return
 
         try:
-            # construct a list of transfer switches from the provided dictionary, drop all parent path
+            # construct a list of transfer switches from the provided dictionary,
+            # drop all parent path
             transfer_switches_grouped = {}
             for key, val in transfer_switches_dict.items():
-                # Extract the transfer switch index from the name, e.g., '0' from '/sys/devices/transfer_switch/0/state'
+                # Extract the transfer switch index from the name, e.g., '0'
+                # from '/sys/devices/transfer_switch/0/state'
                 parts = key.split("/")
                 if len(parts) >= 5:
                     idx = int(parts[4])

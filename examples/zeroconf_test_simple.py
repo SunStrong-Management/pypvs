@@ -1,4 +1,4 @@
-import socket
+from socket import inet_ntoa
 
 from zeroconf import ServiceBrowser, Zeroconf
 
@@ -12,14 +12,16 @@ class MyListener:
         info = zeroconf.get_service_info(type, name)
         if info:
             print(
-                f"Service {name} added, IP address: {socket.inet_ntoa(info.addresses[0])} port {info.port}"
+                f"Service {name} added, IP address: {inet_ntoa(info.addresses[0])} "
+                f"port {info.port}"
             )
 
     def update_service(self, zeroconf, type, name):
         info = zeroconf.get_service_info(type, name)
         if info:
             print(
-                f"Service {name} update, IP address: {socket.inet_ntoa(info.addresses[0])} port {info.port}"
+                f"Service {name} updated, IP address: {inet_ntoa(info.addresses[0])} "
+                f"port {info.port}"
             )
 
 

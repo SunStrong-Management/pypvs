@@ -38,10 +38,12 @@ class PVSProductionMetersUpdater(PVSUpdater):
             return
 
         try:
-            # construct a list of meters from the provided dictionary, drop all parent path
+            # construct a list of meters from the provided dictionary,
+            #  drop all parent path
             meters_grouped = {}
             for key, val in meters_dict.items():
-                # Extract the meter index from the name, e.g., '0' from '/sys/devices/meter/0/freqHz'
+                # Extract the meter index from the name, e.g., '0'
+                # from '/sys/devices/meter/0/freqHz'
                 parts = key.split("/")
                 if len(parts) >= 5:
                     idx = int(parts[4])
