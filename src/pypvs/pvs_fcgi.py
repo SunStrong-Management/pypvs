@@ -84,7 +84,7 @@ class PVSFCGIClient:
         async with self.session.post(
             url, cookies=self.cookies, data=payload_str, ssl=False
         ) as response:
-            response_text = await response.text()
+            await response.text()
             # FIXME: The server returns 500 or 200 with empty response when
             # the session is invalid
             if response.status == 200:
