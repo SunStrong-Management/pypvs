@@ -6,6 +6,7 @@ import socket
 
 from pypvs.pvs import PVS
 
+
 class DeviceListener:
     def __init__(self, target_hostname: str):
         self.target_hostname = target_hostname
@@ -47,7 +48,7 @@ async def main():
     # Create zeroconf object and listener
     zeroconf = Zeroconf()
     listener = DeviceListener(target_hostname="pvs6.local.")
-    
+
     # Start service browser
     ServiceBrowser(zeroconf, "_pvs6._tcp.local.", listener)
 
@@ -64,4 +65,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-

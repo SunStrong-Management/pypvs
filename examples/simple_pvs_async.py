@@ -2,6 +2,7 @@
 # from a SunStrong Management PVS6 gateway using asyncio.
 #
 
+import os
 import time
 import asyncio
 import aiohttp
@@ -11,6 +12,7 @@ from pypvs.pvs import PVS
 from pypvs.exceptions import ENDPOINT_PROBE_EXCEPTIONS
 
 logging.basicConfig(level=logging.DEBUG)
+
 
 async def fetch_data(pvs):
     # get the uptime
@@ -24,9 +26,13 @@ async def fetch_data(pvs):
     for key, value in livedata.items():
         print(f"{key}: {value}")
 
+
 # Example
 async def main():
-    host = "192.168.11.29"
+    # Get PVS host from environment variable
+    host = os.getenv("PVS_HOST")
+    if host is None:
+        print("Please set the PVS_HOST environment variable with the PVS IP.")
 
     async with aiohttp.ClientSession() as session:
         pvs = PVS(session=session, host=host, user="ssm_owner")
@@ -45,6 +51,7 @@ async def main():
         while True:
             await fetch_data(pvs)
             await asyncio.sleep(5)
+
 
 if __name__ == "__main__":
     try:

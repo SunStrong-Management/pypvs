@@ -1,6 +1,7 @@
 # This is an example of how to use a PVS updater to get data
 #
 
+import os
 import asyncio
 import aiohttp
 
@@ -12,11 +13,16 @@ from pypvs.const import SupportedFeatures
 from pypvs.exceptions import ENDPOINT_PROBE_EXCEPTIONS
 
 import logging
+
 logging.basicConfig(level=logging.DEBUG)
+
 
 # Example
 async def main():
-    host = "localhost:18443"
+    # Get PVS host from environment variable
+    host = os.getenv("PVS_HOST")
+    if host is None:
+        print("Please set the PVS_HOST environment variable with the PVS IP.")
 
     async with aiohttp.ClientSession() as session:
         pvs = PVS(session=session, host=host, user="ssm_owner")
@@ -32,7 +38,9 @@ async def main():
             return
 
         common_properties = CommonProperties()
-        meter_updater = PVSProductionMetersUpdater(pvs.getVarserverVar, pvs.getVarserverVars, common_properties)
+        meter_updater = PVSProductionMetersUpdater(
+            pvs.getVarserverVar, pvs.getVarserverVars, common_properties
+        )
 
         discovered_features = SupportedFeatures(0)
         meter_is_there = await meter_updater.probe(discovered_features)
@@ -50,6 +58,7 @@ async def main():
                 print(f"{meter.serial_number}: {meter}")
 
             await asyncio.sleep(5)
+
 
 if __name__ == "__main__":
     try:
