@@ -1,8 +1,9 @@
 import asyncio
-from zeroconf import Zeroconf, ServiceBrowser
-from aiohttp import ClientSession
-from typing import Optional
 import socket
+from typing import Optional
+
+from aiohttp import ClientSession
+from zeroconf import ServiceBrowser, Zeroconf
 
 from pypvs.pvs import PVS
 

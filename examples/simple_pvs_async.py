@@ -2,14 +2,15 @@
 # from a SunStrong Management PVS6 gateway using asyncio.
 #
 
+import asyncio
+import logging
 import os
 import time
-import asyncio
-import aiohttp
-import logging
 
-from pypvs.pvs import PVS
+import aiohttp
+
 from pypvs.exceptions import ENDPOINT_PROBE_EXCEPTIONS
+from pypvs.pvs import PVS
 
 logging.basicConfig(level=logging.DEBUG)
 

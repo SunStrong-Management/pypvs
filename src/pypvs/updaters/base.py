@@ -1,6 +1,5 @@
 from abc import abstractmethod
-from typing import Awaitable, Callable, Any
-
+from typing import Any, Awaitable, Callable
 
 from ..const import SupportedFeatures
 from ..models.common import CommonProperties

@@ -1,18 +1,18 @@
 # This is an example of how to use a PVS updater to get data
 #
 
-import os
 import asyncio
+import logging
+import os
+
 import aiohttp
 
-from pypvs.pvs import PVS
-from pypvs.updaters.transfer_switch import PVSTransferSwitchUpdater
-from pypvs.models.pvs import PVSData
-from pypvs.models.common import CommonProperties
 from pypvs.const import SupportedFeatures
 from pypvs.exceptions import ENDPOINT_PROBE_EXCEPTIONS
-
-import logging
+from pypvs.models.common import CommonProperties
+from pypvs.models.pvs import PVSData
+from pypvs.pvs import PVS
+from pypvs.updaters.transfer_switch import PVSTransferSwitchUpdater
 
 logging.basicConfig(level=logging.DEBUG)
 

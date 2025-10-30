@@ -1,5 +1,6 @@
-from zeroconf import ServiceBrowser, Zeroconf
 import socket
+
+from zeroconf import ServiceBrowser, Zeroconf
 
 
 class MyListener:

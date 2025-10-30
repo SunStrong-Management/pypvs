@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-from ..const import SupportedFeatures, VARS_MATCH_TRANSFER_SWITCH
+from ..const import VARS_MATCH_TRANSFER_SWITCH, SupportedFeatures
 from ..exceptions import ENDPOINT_PROBE_EXCEPTIONS
 from ..models.pvs import PVSData
 from ..models.transfer_switch import PVSTransferSwitch

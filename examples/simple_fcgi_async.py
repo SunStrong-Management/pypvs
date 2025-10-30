@@ -2,10 +2,11 @@
 # interact with a SunStrong Management PVS6 gateway using basic authentication.
 #
 
-import os
 import asyncio
-import aiohttp
 import logging
+import os
+
+import aiohttp
 
 from pypvs.pvs_fcgi import PVSFCGIClient
 

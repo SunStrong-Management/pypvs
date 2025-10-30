@@ -3,9 +3,9 @@
 from dataclasses import dataclass, field
 from typing import Any
 
+from .ess import PVSESS
 from .inverter import PVSInverter
 from .meter import PVSMeter
-from .ess import PVSESS
 from .transfer_switch import PVSTransferSwitch
 
 

@@ -1,7 +1,8 @@
 """PVS Firmware detection"""
 
+from typing import Any, Awaitable, Callable
+
 from .exceptions import PVSFirmwareCheckError
-from typing import Awaitable, Callable, Any
 
 
 class PVSFirmware:
