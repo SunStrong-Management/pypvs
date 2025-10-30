@@ -27,7 +27,7 @@ async def main():
         host = os.getenv("PVS_HOST")
         if host is None:
             print("Please set the PVS_HOST environment variable with the PVS IP.")
-        client.pvs_url = host  # PVS URL with configurable host
+        client.pvs_url = f"http://{host}"  # PVS URL with configurable host
 
         # Use basic authentication with the username and password
         client.set_pvs_details({"serial": pvs_serial})
