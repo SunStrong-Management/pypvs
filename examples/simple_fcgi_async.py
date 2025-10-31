@@ -16,8 +16,12 @@ logging.basicConfig(level=logging.DEBUG)
 # Example
 async def main():
     async with aiohttp.ClientSession() as session:
-        # Example PVS serial number for authentication, update to your PVS serial
-        pvs_serial = "ZT192585000549A1072"
+        # Get PVS serial number from environment variable
+        pvs_serial = os.getenv("PVS_SN")
+        if pvs_serial is None:
+            print(
+                "Please set the PVS_SN environment variable with the PVS serial number."
+            )
         # The username is: ssm_owner
         # The password is: the last 5 characters of the PVS serial number
         client = PVSFCGIClient(
