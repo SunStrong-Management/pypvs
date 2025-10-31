@@ -3,11 +3,14 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
+
 class PVSFCGIClientLoginError(Exception):
-    """ Exception raised when login to the PVS fails """
+    """Exception raised when login to the PVS fails"""
+
 
 class PVSFCGIClientPostError(Exception):
-    """ Exception raised when POST request to the PVS fails """
+    """Exception raised when POST request to the PVS fails"""
+
 
 class PVSFCGIClient:
     def __init__(self, session, auth_user=None, auth_password=None):
@@ -30,12 +33,8 @@ class PVSFCGIClient:
 
     def set_pvs_details(self, details):
         # check all fields are present
-        if not all(
-            key in details for key in ["serial"]
-        ):
-            raise ValueError(
-                "PVS details must contain serial"
-            )
+        if not all(key in details for key in ["serial"]):
+            raise ValueError("PVS details must contain serial")
 
         self.pvs_details = details
         _LOGGER.info(f"PVS details set: {self.pvs_details}")
@@ -69,7 +68,8 @@ class PVSFCGIClient:
         async with self.session.get(login_url, headers=headers, ssl=False) as response:
             if response.status != 200:
                 raise PVSFCGIClientLoginError(
-                    f"Login failed with status code: {response.status} and response: {response.text}"
+                    f"Login failed with status code: {response.status}"
+                    f" and response: {response.text}"
                 )
 
             self.cookies = response.cookies
@@ -84,13 +84,16 @@ class PVSFCGIClient:
         async with self.session.post(
             url, cookies=self.cookies, data=payload_str, ssl=False
         ) as response:
-            response_text = await response.text()
-            # FIXME: The server retunrs 500 or 200 with empty response when the session is invalid
+            await response.text()
+            # FIXME: The server returns 500 or 200 with empty response when
+            # the session is invalid
             if response.status == 200:
                 _LOGGER.debug("POST request successful!")
                 return await response.json()
             elif response.status in [400, 401, 500]:
-                raise PVSFCGIClientLoginError("Unauthorized access (missing cookie). Retry login!")
+                raise PVSFCGIClientLoginError(
+                    "Unauthorized access (missing cookie). Retry login!"
+                )
             else:
                 raise PVSFCGIClientPostError(
                     f"POST request failed with status code: {response.status}"
@@ -112,12 +115,15 @@ class PVSFCGIClient:
             - Response data in JSON format if successful.
         """
         if not self._pvs_url:
-            raise PVSFCGIClientPostError("PVS URL must be set before making POST requests.")
+            raise PVSFCGIClientPostError(
+                "PVS URL must be set before making POST requests."
+            )
 
         url = f"{self._pvs_url}{endpoint}"
         payload_str = "".join([f"{key}={value}" for key, value in params.items()])
         _LOGGER.debug(
-            f"POST request to {url} with payload: {payload_str} and cookies: {self.cookies}"
+            f"POST request to {url} with payload: {payload_str} "
+            f"and cookies: {self.cookies}"
         )
 
         # First try our luck if the session is still valid

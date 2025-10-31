@@ -2,21 +2,27 @@
 #
 
 import asyncio
+import logging
+import os
+
 import aiohttp
 
-from pypvs.pvs import PVS
-from pypvs.updaters.production_inverters import PVSProductionInvertersUpdater
-from pypvs.models.pvs import PVSData
-from pypvs.models.common import CommonProperties
 from pypvs.const import SupportedFeatures
 from pypvs.exceptions import ENDPOINT_PROBE_EXCEPTIONS
+from pypvs.models.common import CommonProperties
+from pypvs.models.pvs import PVSData
+from pypvs.pvs import PVS
+from pypvs.updaters.production_inverters import PVSProductionInvertersUpdater
 
-import logging
 logging.basicConfig(level=logging.DEBUG)
+
 
 # Example
 async def main():
-    host = "localhost:18443"
+    # Get PVS host from environment variable
+    host = os.getenv("PVS_HOST")
+    if host is None:
+        print("Please set the PVS_HOST environment variable with the PVS IP.")
 
     async with aiohttp.ClientSession() as session:
         pvs = PVS(session=session, host=host, user="ssm_owner")
@@ -32,7 +38,9 @@ async def main():
             return
 
         common_properties = CommonProperties()
-        inverter_updater = PVSProductionInvertersUpdater(pvs.getVarserverVar, pvs.getVarserverVars, common_properties)
+        inverter_updater = PVSProductionInvertersUpdater(
+            pvs.getVarserverVar, pvs.getVarserverVars, common_properties
+        )
 
         discovered_features = SupportedFeatures(0)
         inverter_is_there = await inverter_updater.probe(discovered_features)
@@ -50,6 +58,7 @@ async def main():
                 print(f"{inverter.serial_number}: {inverter}")
 
             await asyncio.sleep(5)
+
 
 if __name__ == "__main__":
     try:

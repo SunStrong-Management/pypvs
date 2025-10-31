@@ -2,21 +2,27 @@
 #
 
 import asyncio
+import logging
+import os
+
 import aiohttp
 
-from pypvs.pvs import PVS
-from pypvs.updaters.gateway import PVSGatewayUpdater
-from pypvs.models.pvs import PVSData
-from pypvs.models.common import CommonProperties
 from pypvs.const import SupportedFeatures
 from pypvs.exceptions import ENDPOINT_PROBE_EXCEPTIONS
+from pypvs.models.common import CommonProperties
+from pypvs.models.pvs import PVSData
+from pypvs.pvs import PVS
+from pypvs.updaters.gateway import PVSGatewayUpdater
 
-import logging
 logging.basicConfig(level=logging.DEBUG)
+
 
 # Example
 async def main():
-    host = "192.168.11.29"
+    # Get PVS host from environment variable
+    host = os.getenv("PVS_HOST")
+    if host is None:
+        print("Please set the PVS_HOST environment variable with the PVS IP.")
 
     async with aiohttp.ClientSession() as session:
         pvs = PVS(session=session, host=host, user="ssm_owner")
@@ -32,7 +38,9 @@ async def main():
             return
 
         common_properties = CommonProperties()
-        gateway_updater = PVSGatewayUpdater(pvs.getVarserverVar, pvs.getVarserverVars, common_properties)
+        gateway_updater = PVSGatewayUpdater(
+            pvs.getVarserverVar, pvs.getVarserverVars, common_properties
+        )
 
         discovered_features = SupportedFeatures(0)
         gateway_is_there = await gateway_updater.probe(discovered_features)
@@ -50,6 +58,7 @@ async def main():
             print(f"{pvs.serial_number}: {gateway}")
 
             await asyncio.sleep(5)
+
 
 if __name__ == "__main__":
     try:

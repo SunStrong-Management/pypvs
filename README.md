@@ -23,8 +23,17 @@ Install `pypvs` in development mode
 pip install -e .
 ```
 
-Then run the example scripts
+Then run the example scripts, first set environment variables with your PVS serial number and IP address
+```bash
+    export PVS_HOST=192.168.1.100
+    export PVS_SN=ZT240685000549F0020
 ```
+
+You can run the examples directly:
+```
+# Activate the environment first
+source venv/bin/activate
+
 python examples/simple_fcgi_async.py
 
 python examples/simple_pvs_async.py
@@ -33,4 +42,3 @@ python examples/simple_pvs_async.py
 # Access to the PVS via varserver
 
 Please refer to [LocalAPI documentation](doc/LocalAPI.md) for details on accessing the PVS via varserver.
-

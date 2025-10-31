@@ -1,10 +1,10 @@
 import logging
 from typing import Any
 
-from ..const import SupportedFeatures, VARS_MATCH_INVERTERS
+from ..const import VARS_MATCH_INVERTERS, SupportedFeatures
 from ..exceptions import ENDPOINT_PROBE_EXCEPTIONS
-from ..models.pvs import PVSData
 from ..models.inverter import PVSInverter
+from ..models.pvs import PVSData
 from .base import PVSUpdater
 
 _LOGGER = logging.getLogger(__name__)
@@ -30,16 +30,20 @@ class PVSProductionInvertersUpdater(PVSUpdater):
     async def update(self, pvs_data: PVSData) -> None:
         """Update the PVS for this updater."""
         try:
-            inverters_dict: list[dict[str, Any]] = await self._request_vars(VARS_MATCH_INVERTERS)
+            inverters_dict: list[dict[str, Any]] = await self._request_vars(
+                VARS_MATCH_INVERTERS
+            )
         except Exception as e:
             _LOGGER.error("Failed to request inverter vars: %s", e)
             return
 
         try:
-            # construct a list of inverters from the provided dictionary, drop all parent path
+            # construct a list of inverters from the provided dictionary,
+            # drop all parent path
             inverters_grouped = {}
             for key, val in inverters_dict.items():
-                # Extract the inverter index from the name, e.g., '0' from '/sys/devices/inverter/0/freqHz'
+                # Extract the inverter index from the name, e.g., '0'
+                # from '/sys/devices/inverter/0/freqHz'
                 parts = key.split("/")
                 if len(parts) >= 5:
                     idx = int(parts[4])
@@ -50,7 +54,10 @@ class PVSProductionInvertersUpdater(PVSUpdater):
                         inverters_grouped[idx][param] = val
 
             # Convert to a list sorted by index
-            inverters_data = [inverters_grouped[idx] for idx in sorted(inverters_grouped.keys(), key=int)]
+            inverters_data = [
+                inverters_grouped[idx]
+                for idx in sorted(inverters_grouped.keys(), key=int)
+            ]
         except Exception as e:
             _LOGGER.error("Failed to process inverter data: %s", e)
             return

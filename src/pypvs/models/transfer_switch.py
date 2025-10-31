@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Any
 
 
@@ -26,10 +25,15 @@ class PVSTransferSwitch:
 
     @classmethod
     def from_varserver(cls, data: dict[str, Any]) -> "PVSTransferSwitch":
-        """Initialize from /sys/devices/transfer_switch/*/* varserver variables packed in JSON."""
+        """
+        Initialize from /sys/devices/transfer_switch/*/* varserver variables packed
+        in JSON.
+        """
         date_str = data.get("msmtEps", "1970-01-01T00:00:00Z")
         try:
-            dt = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+            dt = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ").replace(
+                tzinfo=timezone.utc
+            )
             last_report_date = int(dt.timestamp())
         except Exception:
             last_report_date = 0
