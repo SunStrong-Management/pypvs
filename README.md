@@ -30,8 +30,6 @@ PVS_HOST=192.168.1.100 python examples/simple_fcgi_async.py
 PVS_HOST=192.168.1.100 python examples/simple_pvs_async.py
 ```
 
-For the zeroconf_*.py examples additional library `zeroconf` must be installed using following command: `pip install zeroconf`.
-
 # Access to the PVS via varserver
 
 Please refer to [LocalAPI documentation](doc/LocalAPI.md) for details on accessing the PVS via varserver.
