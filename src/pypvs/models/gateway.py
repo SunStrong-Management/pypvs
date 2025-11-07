@@ -11,6 +11,7 @@ class PVSGateway:
     """Model for the PVS itself as a gateway."""
 
     model: str
+    pvs_type: str
     hardware_version: str
     software_version: str
     uptime_s: float
@@ -23,12 +24,13 @@ class PVSGateway:
     def from_varserver(cls, data: dict[str, Any]) -> PVSGateway:
         """Initialize from a /sys/info varserver variables"""
 
-        model = data.get("/sys/info/sys_type").strip()
-        rev = data.get("/sys/info/hwrev").strip()
+        pvs_model = data.get("/sys/info/model").strip()
+        hw_rev = data.get("/sys/info/hwrev").strip()
 
         return cls(
-            model=model,
-            hardware_version=f"{model} {rev}",
+            model=data.get("/sys/info/sys_type").strip(),
+            pvs_type=pvs_model,
+            hardware_version=f"{pvs_model} {hw_rev}",
             software_version=data.get("/sys/info/sw_rev"),
             uptime_s=float(data.get("/sys/info/uptime")),
             mac=data.get("/sys/info/lmac"),
