@@ -23,13 +23,16 @@ class PVSGateway:
     def from_varserver(cls, data: dict[str, Any]) -> PVSGateway:
         """Initialize from a /sys/info varserver variables"""
 
+        model = data.get("/sys/info/sys_type").strip()
+        rev = data.get("/sys/info/hwrev").strip()
+
         return cls(
-            model=data["/sys/info/sys_type"].strip(),
-            hardware_version=data["/sys/info/model"] + " " + data["/sys/info/hwrev"],
-            software_version=data["/sys/info/sw_rev"],
-            uptime_s=data["/sys/info/uptime"],
-            mac=data["/sys/info/lmac"],
-            ram_usage_percent=data["/sys/info/ram_usage"],
-            flash_usage_percent=data["/sys/info/flash_usage"],
-            cpu_usage_percent=data["/sys/info/cpu_usage"],
+            model=model,
+            hardware_version=f"{model} {rev}",
+            software_version=data.get("/sys/info/sw_rev"),
+            uptime_s=int(data.get("/sys/info/uptime")),
+            mac=data.get("/sys/info/lmac"),
+            ram_usage_percent=int(data.get("/sys/info/ram_usage")),
+            flash_usage_percent=int(data.get("/sys/info/flash_usage")),
+            cpu_usage_percent=int(data.get("/sys/info/cpu_usage")),
         )
