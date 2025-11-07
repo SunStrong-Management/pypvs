@@ -13,7 +13,7 @@ class PVSGateway:
     model: str
     hardware_version: str
     software_version: str
-    uptime_s: int
+    uptime_s: float
     mac: str
     ram_usage_percent: int
     flash_usage_percent: int
@@ -30,7 +30,7 @@ class PVSGateway:
             model=model,
             hardware_version=f"{model} {rev}",
             software_version=data.get("/sys/info/sw_rev"),
-            uptime_s=int(data.get("/sys/info/uptime")),
+            uptime_s=float(data.get("/sys/info/uptime")),
             mac=data.get("/sys/info/lmac"),
             ram_usage_percent=int(data.get("/sys/info/ram_usage")),
             flash_usage_percent=int(data.get("/sys/info/flash_usage")),
