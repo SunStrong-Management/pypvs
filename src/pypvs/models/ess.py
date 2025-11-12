@@ -46,6 +46,10 @@ class PVSESS:
         except Exception:
             last_report_date = 0
 
+        soc_val_scaled = float(data.get("socVal", 0.0)) * 100.0
+        customer_soc_val_scaled = float(data.get("customerSocVal", 0.0)) * 100.0
+        soh_val_scaled = float(data.get("sohVal", 0)) * 100.0
+
         return cls(
             serial_number=data.get("sn", ""),
             model=data.get("prodMdlNm", ""),
@@ -56,9 +60,9 @@ class PVSESS:
             v1n_v=float(data.get("v1nV", 0.0)),
             v2n_v=float(data.get("v2nV", 0.0)),
             op_mode=data.get("opMode", ""),
-            soc_val=float(data.get("socVal", 0.0)),
-            customer_soc_val=float(data.get("customerSocVal", 0.0)),
-            soh_val=int(data.get("sohVal", 0)),
+            soc_val=soc_val_scaled,
+            customer_soc_val=customer_soc_val_scaled,
+            soh_val=soh_val_scaled,
             t_invtr_degc=float(data.get("tInvtrDegc", 0.0)),
             v_batt_v=float(data.get("vBattV", 0.0)),
             chrg_limit_pmax_kw=float(data.get("chrgLimitPmaxKw", 0.0)),
