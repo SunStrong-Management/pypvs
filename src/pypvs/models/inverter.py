@@ -43,15 +43,15 @@ class PVSInverter:
     serial_number: str
     model: str
     last_report_date: Optional[int] = None
-    last_report_kw: Optional[float | str] = None
-    last_report_voltage_v: Optional[float | str] = None
-    last_report_current_a: Optional[float | str] = None
-    last_report_frequency_hz: Optional[float | str] = None
-    last_report_temperature_c: Optional[float | str] = None
-    lte_kwh: Optional[float | str] = None
-    last_mppt_voltage_v: Optional[float | str] = None
-    last_mppt_current_a: Optional[float | str] = None
-    last_mppt_power_kw: Optional[float | str] = None
+    last_report_kw: Optional[float] = None
+    last_report_voltage_v: Optional[float] = None
+    last_report_current_a: Optional[float] = None
+    last_report_frequency_hz: Optional[float] = None
+    last_report_temperature_c: Optional[float] = None
+    lte_kwh: Optional[float] = None
+    last_mppt_voltage_v: Optional[float] = None
+    last_mppt_current_a: Optional[float] = None
+    last_mppt_power_kw: Optional[float] = None
 
     @classmethod
     def from_varserver(cls, data: dict[str, Any]) -> PVSInverter:
@@ -59,23 +59,23 @@ class PVSInverter:
         packed in JSON to a PVSInverter instance."""
 
         # Convert date from format "2024-09-30T16:15:00Z" to UTC seconds
-        date_str = data["msmtEps"]
+        date_str = data.get("msmtEps", "1970-01-01T00:00:00Z")
         dt = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ").replace(
             tzinfo=timezone.utc
         )
         last_report_date = int(dt.timestamp())
 
         return cls(
-            serial_number=data["sn"],
-            model=data["prodMdlNm"],
+            serial_number=data.get("sn"),
+            model=data.get("prodMdlNm"),
             last_report_date=last_report_date,
-            last_report_kw=data["p3phsumKw"],
-            last_report_voltage_v=data["vln3phavgV"],
-            last_report_current_a=data["i3phsumA"],
-            last_report_frequency_hz=data["freqHz"],
-            last_report_temperature_c=data["tHtsnkDegc"],
-            lte_kwh=data["ltea3phsumKwh"],
-            last_mppt_voltage_v=data.get("vMppt1V"),
-            last_mppt_current_a=data.get("iMppt1A"),
-            last_mppt_power_kw=data.get("pMppt1Kw"),
+            last_report_kw=float(data.get("p3phsumKw")),
+            last_report_voltage_v=float(data.get("vln3phavgV")),
+            last_report_current_a=float(data.get("i3phsumA")),
+            last_report_frequency_hz=float(data.get("freqHz")),
+            last_report_temperature_c=float(data.get("tHtsnkDegc")),
+            lte_kwh=float(data.get("ltea3phsumKwh")),
+            last_mppt_voltage_v=float(data.get("vMppt1V")),
+            last_mppt_current_a=float(data.get("iMppt1A")),
+            last_mppt_power_kw=float(data.get("pMppt1Kw")),
         )
