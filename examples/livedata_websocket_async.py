@@ -55,11 +55,16 @@ async def main():
             print(f"  Net Energy:       {live_data.net_en} kWh")
             print(f"  Site Load Power:  {live_data.site_load_p} kW")
             print(f"  Site Load Energy: {live_data.site_load_en} kWh")
-            print(f"  ESS Power:        {live_data.ess_p} kW")
-            print(f"  ESS Energy:       {live_data.ess_en} kWh")
-            print(f"  Battery SOC:      {live_data.soc}%")
-            print(f"  Backup Time:      {live_data.backup_time_remaining} min")
-            print(f"  MIDC State:       {live_data.midstate}")
+            if live_data.ess_p is not None:
+                print(f"  ESS Power:        {live_data.ess_p} kW")
+            if live_data.ess_en is not None:
+                print(f"  ESS Energy:       {live_data.ess_en} kWh")
+            if live_data.soc is not None:
+                print(f"  Battery SOC:      {live_data.soc} %")
+            if live_data.backup_time_remaining is not None:
+                print(f"  Backup Time:      {live_data.backup_time_remaining} min")
+            if live_data.midstate is not None:
+                print(f"  MIDC State:       {live_data.midstate}")
             print("=" * 50)
 
     except asyncio.CancelledError:
