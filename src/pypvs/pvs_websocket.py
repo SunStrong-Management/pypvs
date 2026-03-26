@@ -62,15 +62,24 @@ ConnectionStateCallback = Callable[[ConnectionState], None]
 class PVSWebSocket:
     """WebSocket client for PVS live data with auto-reconnect."""
 
-    def __init__(self, host: str, port: int = 9002) -> None:
+    def __init__(
+        self,
+        host: str,
+        port: int = 9002,
+        enable_callback: Callable[[], Any] | None = None,
+    ) -> None:
         """Initialize the WebSocket client.
 
         Args:
             host: PVS hostname or IP address
             port: WebSocket port (default 9002)
+            enable_callback: Optional async callable invoked before each
+                connection attempt to ensure the telemetry websocket is
+                enabled on the PVS.
         """
         self._host = host
         self._port = port
+        self._enable_callback = enable_callback
         self._callbacks: list[LiveDataCallback] = []
         self._state_callbacks: list[ConnectionStateCallback] = []
         self._task: asyncio.Task | None = None
@@ -199,6 +208,16 @@ class PVSWebSocket:
                         )
 
                     self._set_state(ConnectionState.CONNECTING)
+
+                    # Ensure telemetry websocket is enabled on the PVS
+                    if self._enable_callback is not None:
+                        try:
+                            await self._enable_callback()
+                        except Exception as e:
+                            _LOGGER.warning(
+                                "Failed to enable telemetry websocket: %s", e
+                            )
+
                     _LOGGER.info(
                         "Attempting WebSocket connection to %s (attempt %d)",
                         websocket_url,

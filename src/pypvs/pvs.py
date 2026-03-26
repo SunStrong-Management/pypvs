@@ -22,6 +22,7 @@ from .models.pvs import PVSData
 from .pvs_fcgi import PVSFCGIClient, PVSFCGIClientLoginError, PVSFCGIClientPostError
 
 # isort: on
+from .pvs_websocket import PVSWebSocket
 from .updaters.base import PVSUpdater
 from .updaters.ess import PVSESSUpdater
 from .updaters.gateway import PVSGatewayUpdater
@@ -219,3 +220,22 @@ class PVS:
         """Return the supported features."""
         assert self._supported_features is not None, "Call setup() first"  # nosec
         return self._supported_features
+
+    async def enable_telemetry_websocket(self) -> None:
+        """Enable the telemetry websocket on the PVS."""
+        await self.getVarserver("/vars", params={"set": "/sys/telemetryws/enable=1"})
+
+    def get_websocket(self, port: int = 9002) -> PVSWebSocket:
+        """Create a PVSWebSocket pre-configured to enable telemetry on connect.
+
+        Args:
+            port: WebSocket port (default 9002)
+
+        Returns:
+            PVSWebSocket instance with enable callback wired up
+        """
+        return PVSWebSocket(
+            host=self._host,
+            port=port,
+            enable_callback=self.enable_telemetry_websocket,
+        )

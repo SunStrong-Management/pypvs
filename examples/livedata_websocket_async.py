@@ -8,7 +8,10 @@ import asyncio
 import logging
 import os
 
-from pypvs.pvs_websocket import PVSWebSocket
+import aiohttp
+
+from pypvs.exceptions import ENDPOINT_PROBE_EXCEPTIONS
+from pypvs.pvs import PVS
 
 logging.basicConfig(level=logging.INFO)
 _LOGGER = logging.getLogger(__name__)
@@ -26,54 +29,66 @@ async def main():
         print("Please set the PVS_HOST environment variable with the PVS IP.")
         return
 
-    # Create WebSocket client
-    ws = PVSWebSocket(host=host)
+    async with aiohttp.ClientSession() as session:
+        pvs = PVS(session=session, host=host, user="ssm_owner")
+        try:
+            await pvs.discover()
+            pvs_serial = pvs.serial_number
+            pvs_password = pvs_serial[-5:]
+            await pvs.setup(auth_password=pvs_password)
+            _LOGGER.info(f"Connected to PVS with serial: {pvs_serial}")
+        except ENDPOINT_PROBE_EXCEPTIONS as e:
+            _LOGGER.error(f"Cannot communicate with the PVS: {e}")
+            return
 
-    # Add listener for updates
-    remove_listener = ws.add_listener(on_live_data_update)
+        # Create WebSocket client with automatic telemetry enable
+        ws = pvs.get_websocket()
 
-    # Connect (starts background task with auto-reconnect)
-    await ws.connect()
-    _LOGGER.info(f"WebSocket connecting to {host}...")
+        # Add listener for updates
+        remove_listener = ws.add_listener(on_live_data_update)
 
-    try:
-        # Print live data every 5 seconds
-        while True:
-            await asyncio.sleep(5)
+        # Connect (starts background task with auto-reconnect)
+        await ws.connect()
+        _LOGGER.info(f"WebSocket connecting to {host}...")
 
-            live_data = ws.live_data
-            if live_data is None:
-                _LOGGER.info("Waiting for connection...")
-                continue
+        try:
+            # Print live data every 5 seconds
+            while True:
+                await asyncio.sleep(5)
 
-            print("\n" + "=" * 50)
-            print("Live Data:")
-            print(f"  Timestamp:        {live_data.time}")
-            print(f"  PV Power:         {live_data.pv_p} kW")
-            print(f"  PV Energy:        {live_data.pv_en} kWh")
-            print(f"  Net Power:        {live_data.net_p} kW")
-            print(f"  Net Energy:       {live_data.net_en} kWh")
-            print(f"  Site Load Power:  {live_data.site_load_p} kW")
-            print(f"  Site Load Energy: {live_data.site_load_en} kWh")
-            if live_data.ess_p is not None:
-                print(f"  ESS Power:        {live_data.ess_p} kW")
-            if live_data.ess_en is not None:
-                print(f"  ESS Energy:       {live_data.ess_en} kWh")
-            if live_data.soc is not None:
-                print(f"  Battery SOC:      {live_data.soc} %")
-            if live_data.backup_time_remaining is not None:
-                print(f"  Backup Time:      {live_data.backup_time_remaining} min")
-            if live_data.midstate is not None:
-                print(f"  MIDC State:       {live_data.midstate}")
-            print("=" * 50)
+                live_data = ws.live_data
+                if live_data is None:
+                    _LOGGER.info("Waiting for connection...")
+                    continue
 
-    except asyncio.CancelledError:
-        pass
-    finally:
-        # Clean up
-        remove_listener()
-        await ws.disconnect()
-        _LOGGER.info("Disconnected")
+                print("\n" + "=" * 50)
+                print("Live Data:")
+                print(f"  Timestamp:        {live_data.time}")
+                print(f"  PV Power:         {live_data.pv_p} kW")
+                print(f"  PV Energy:        {live_data.pv_en} kWh")
+                print(f"  Net Power:        {live_data.net_p} kW")
+                print(f"  Net Energy:       {live_data.net_en} kWh")
+                print(f"  Site Load Power:  {live_data.site_load_p} kW")
+                print(f"  Site Load Energy: {live_data.site_load_en} kWh")
+                if live_data.ess_p is not None:
+                    print(f"  ESS Power:        {live_data.ess_p} kW")
+                if live_data.ess_en is not None:
+                    print(f"  ESS Energy:       {live_data.ess_en} kWh")
+                if live_data.soc is not None:
+                    print(f"  Battery SOC:      {live_data.soc} %")
+                if live_data.backup_time_remaining is not None:
+                    print(f"  Backup Time:      {live_data.backup_time_remaining} min")
+                if live_data.midstate is not None:
+                    print(f"  MIDC State:       {live_data.midstate}")
+                print("=" * 50)
+
+        except asyncio.CancelledError:
+            pass
+        finally:
+            # Clean up
+            remove_listener()
+            await ws.disconnect()
+            _LOGGER.info("Disconnected")
 
 
 if __name__ == "__main__":
