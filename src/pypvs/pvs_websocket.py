@@ -13,7 +13,7 @@ from typing import Any
 
 import aiohttp
 
-from .models.livedata import PVSLiveData
+from .models.livedata import LIVEDATA_FIELD_DEFINITIONS, PVSLiveData
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,31 +26,11 @@ class ConnectionState(Enum):
     CONNECTED = "connected"
 
 
-# Mapping from WebSocket field name to (var_path, attr_name, value_type)
-_FIELD_DEFINITIONS: tuple[tuple[str, str, str, str], ...] = (
-    ("time", "/sys/livedata/time", "time", "timestamp"),
-    ("pv_p", "/sys/livedata/pv_p", "pv_p", "numeric"),
-    ("pv_en", "/sys/livedata/pv_en", "pv_en", "numeric"),
-    ("net_p", "/sys/livedata/net_p", "net_p", "numeric"),
-    ("net_en", "/sys/livedata/net_en", "net_en", "numeric"),
-    ("site_load_p", "/sys/livedata/site_load_p", "site_load_p", "numeric"),
-    ("site_load_en", "/sys/livedata/site_load_en", "site_load_en", "numeric"),
-    ("ess_en", "/sys/livedata/ess_en", "ess_en", "numeric"),
-    ("ess_p", "/sys/livedata/ess_p", "ess_p", "numeric"),
-    ("soc", "/sys/livedata/soc", "soc", "numeric"),
-    (
-        "backupTimeRemaining",
-        "/sys/livedata/backupTimeRemaining",
-        "backup_time_remaining",
-        "numeric",
-    ),
-    ("midstate", "/sys/livedata/midstate", "midstate", "string"),
-)
-
 # Pre-built lookup table for websocket message processing
+# Maps ws_field_name -> (var_path, attr_name, value_type)
 _WS_FIELD_MAP: dict[str, tuple[str, str, str]] = {
     ws_field: (var_path, attr_name, value_type)
-    for ws_field, var_path, attr_name, value_type in _FIELD_DEFINITIONS
+    for ws_field, var_path, attr_name, value_type in LIVEDATA_FIELD_DEFINITIONS
 }
 
 

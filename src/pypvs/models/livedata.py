@@ -6,20 +6,32 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
-# Mapping from varserver path to attribute name
+# Canonical field definitions for livedata.
+# Each tuple: (ws_field_name, var_path, attr_name, value_type)
+LIVEDATA_FIELD_DEFINITIONS: tuple[tuple[str, str, str, str], ...] = (
+    ("time", "/sys/livedata/time", "time", "timestamp"),
+    ("pv_p", "/sys/livedata/pv_p", "pv_p", "numeric"),
+    ("pv_en", "/sys/livedata/pv_en", "pv_en", "numeric"),
+    ("net_p", "/sys/livedata/net_p", "net_p", "numeric"),
+    ("net_en", "/sys/livedata/net_en", "net_en", "numeric"),
+    ("site_load_p", "/sys/livedata/site_load_p", "site_load_p", "numeric"),
+    ("site_load_en", "/sys/livedata/site_load_en", "site_load_en", "numeric"),
+    ("ess_en", "/sys/livedata/ess_en", "ess_en", "numeric"),
+    ("ess_p", "/sys/livedata/ess_p", "ess_p", "numeric"),
+    ("soc", "/sys/livedata/soc", "soc", "numeric"),
+    (
+        "backupTimeRemaining",
+        "/sys/livedata/backupTimeRemaining",
+        "backup_time_remaining",
+        "numeric",
+    ),
+    ("midstate", "/sys/livedata/midstate", "midstate", "string"),
+)
+
+# Mapping from varserver path to attribute name (derived from field definitions)
 _VAR_PATH_TO_ATTR: dict[str, str] = {
-    "/sys/livedata/time": "time",
-    "/sys/livedata/pv_p": "pv_p",
-    "/sys/livedata/pv_en": "pv_en",
-    "/sys/livedata/net_p": "net_p",
-    "/sys/livedata/net_en": "net_en",
-    "/sys/livedata/site_load_p": "site_load_p",
-    "/sys/livedata/site_load_en": "site_load_en",
-    "/sys/livedata/ess_en": "ess_en",
-    "/sys/livedata/ess_p": "ess_p",
-    "/sys/livedata/soc": "soc",
-    "/sys/livedata/backupTimeRemaining": "backup_time_remaining",
-    "/sys/livedata/midstate": "midstate",
+    var_path: attr_name
+    for _, var_path, attr_name, _ in LIVEDATA_FIELD_DEFINITIONS
 }
 
 
