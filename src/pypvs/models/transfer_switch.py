@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
+from .varserver_coerce import float_var, str_var
+
 
 @dataclass(slots=True)
 class PVSTransferSwitch:
@@ -29,7 +31,7 @@ class PVSTransferSwitch:
         Initialize from /sys/devices/transfer_switch/*/* varserver variables packed
         in JSON.
         """
-        date_str = data.get("msmtEps", "1970-01-01T00:00:00Z")
+        date_str = str_var(data, "msmtEps", "1970-01-01T00:00:00Z")
         try:
             dt = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ").replace(
                 tzinfo=timezone.utc
@@ -39,15 +41,15 @@ class PVSTransferSwitch:
             last_report_date = 0
 
         return cls(
-            serial_number=data.get("sn", ""),
-            model=data.get("prodMdlNm", ""),
+            serial_number=str_var(data, "sn"),
+            model=str_var(data, "prodMdlNm"),
             last_report_date=last_report_date,
-            mid_state=data.get("midStEnum", ""),
-            pvd1_state=data.get("pvd1StEnum", ""),
-            temperature_c=float(data.get("tDegc", 0.0)),
-            v1n_grid_v=float(data.get("v1nGridV", 0.0)),
-            v1n_v=float(data.get("v1nV", 0.0)),
-            v2n_grid_v=float(data.get("v2nGridV", 0.0)),
-            v2n_v=float(data.get("v2nV", 0.0)),
-            v_supply_v=float(data.get("vSpplyV", 0.0)),
+            mid_state=str_var(data, "midStEnum"),
+            pvd1_state=str_var(data, "pvd1StEnum"),
+            temperature_c=float_var(data, "tDegc", 0.0),
+            v1n_grid_v=float_var(data, "v1nGridV", 0.0),
+            v1n_v=float_var(data, "v1nV", 0.0),
+            v2n_grid_v=float_var(data, "v2nGridV", 0.0),
+            v2n_v=float_var(data, "v2nV", 0.0),
+            v_supply_v=float_var(data, "vSpplyV", 0.0),
         )

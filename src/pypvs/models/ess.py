@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
+from .varserver_coerce import float_var, str_var
+
 
 @dataclass(slots=True)
 class PVSESS:
@@ -37,7 +39,7 @@ class PVSESS:
         """Initialize from /sys/devices/ess/*/* varserver variables packed in JSON."""
 
         # Convert date from format "2024-09-30T16:15:00Z" to UTC seconds
-        date_str = data.get("msmtEps", "1970-01-01T00:00:00Z")
+        date_str = str_var(data, "msmtEps", "1970-01-01T00:00:00Z")
         try:
             dt = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ").replace(
                 tzinfo=timezone.utc
@@ -46,29 +48,29 @@ class PVSESS:
         except Exception:
             last_report_date = 0
 
-        soc_val_scaled = float(data.get("socVal", 0.0)) * 100.0
-        customer_soc_val_scaled = float(data.get("customerSocVal", 0.0)) * 100.0
-        soh_val_scaled = float(data.get("sohVal", 0)) * 100.0
+        soc_val_scaled = float_var(data, "socVal", 0.0) * 100.0
+        customer_soc_val_scaled = float_var(data, "customerSocVal", 0.0) * 100.0
+        soh_val_scaled = float_var(data, "sohVal", 0.0) * 100.0
 
         return cls(
-            serial_number=data.get("sn", ""),
-            model=data.get("prodMdlNm", ""),
+            serial_number=str_var(data, "sn"),
+            model=str_var(data, "prodMdlNm"),
             last_report_date=last_report_date,
-            power_3ph_kw=float(data.get("p3phsumKw", 0.0)),
-            neg_lte_kwh=float(data.get("negLtea3phsumKwh", 0.0)),
-            pos_lte_kwh=float(data.get("posLtea3phsumKwh", 0.0)),
-            v1n_v=float(data.get("v1nV", 0.0)),
-            v2n_v=float(data.get("v2nV", 0.0)),
-            op_mode=data.get("opMode", ""),
+            power_3ph_kw=float_var(data, "p3phsumKw", 0.0),
+            neg_lte_kwh=float_var(data, "negLtea3phsumKwh", 0.0),
+            pos_lte_kwh=float_var(data, "posLtea3phsumKwh", 0.0),
+            v1n_v=float_var(data, "v1nV", 0.0),
+            v2n_v=float_var(data, "v2nV", 0.0),
+            op_mode=str_var(data, "opMode"),
             soc_val=soc_val_scaled,
             customer_soc_val=customer_soc_val_scaled,
             soh_val=soh_val_scaled,
-            t_invtr_degc=float(data.get("tInvtrDegc", 0.0)),
-            v_batt_v=float(data.get("vBattV", 0.0)),
-            chrg_limit_pmax_kw=float(data.get("chrgLimitPmaxKw", 0.0)),
-            dischrg_lim_pmax_kw=float(data.get("dischrgLimPmaxKw", 0.0)),
-            max_t_batt_cell_degc=float(data.get("maxTBattCellDegc", 0.0)),
-            min_t_batt_cell_degc=float(data.get("minTBattCellDegc", 0.0)),
-            max_v_batt_cell_v=float(data.get("maxVBattCellV", 0.0)),
-            min_v_batt_cell_v=float(data.get("minVBattCellV", 0.0)),
+            t_invtr_degc=float_var(data, "tInvtrDegc", 0.0),
+            v_batt_v=float_var(data, "vBattV", 0.0),
+            chrg_limit_pmax_kw=float_var(data, "chrgLimitPmaxKw", 0.0),
+            dischrg_lim_pmax_kw=float_var(data, "dischrgLimPmaxKw", 0.0),
+            max_t_batt_cell_degc=float_var(data, "maxTBattCellDegc", 0.0),
+            min_t_batt_cell_degc=float_var(data, "minTBattCellDegc", 0.0),
+            max_v_batt_cell_v=float_var(data, "maxVBattCellV", 0.0),
+            min_v_batt_cell_v=float_var(data, "minVBattCellV", 0.0),
         )

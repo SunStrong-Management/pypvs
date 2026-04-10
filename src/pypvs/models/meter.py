@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
+from .varserver_coerce import float_var, str_var
+
 
 @dataclass(slots=True)
 class PVSMeter:
@@ -39,7 +41,7 @@ class PVSMeter:
         """Initialize from /sys/devices/meter/*/* varserver variables packed in JSON."""
 
         # Convert date from format "2024-09-30T16:15:00Z" to UTC seconds
-        date_str = data.get("msmtEps", "1970-01-01T00:00:00Z")
+        date_str = str_var(data, "msmtEps", "1970-01-01T00:00:00Z")
         try:
             dt = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ").replace(
                 tzinfo=timezone.utc
@@ -49,26 +51,26 @@ class PVSMeter:
             last_report_date = 0
 
         return cls(
-            serial_number=data.get("sn", ""),
-            model=data.get("prodMdlNm", ""),
+            serial_number=str_var(data, "sn"),
+            model=str_var(data, "prodMdlNm"),
             last_report_date=last_report_date,
-            power_3ph_kw=float(data.get("p3phsumKw", 0.0)),
-            voltage_3ph_v=float(data.get("vln3phavgV", 0.0)),
-            current_3ph_a=float(data.get("i3phsumA", 0.0)),
-            freq_hz=float(data.get("freqHz", 0.0)),
-            lte_3ph_kwh=float(data.get("ltea3phsumKwh", 0.0)),
-            ct_scale_factor=float(data.get("ctSclFctr", 1.0)),
-            i1_a=float(data.get("i1A", 0.0)),
-            i2_a=float(data.get("i2A", 0.0)),
-            neg_lte_kwh=float(data.get("negLtea3phsumKwh", 0.0)),
-            net_lte_kwh=float(data.get("netLtea3phsumKwh", 0.0)),
-            p1_kw=float(data.get("p1Kw", 0.0)),
-            p2_kw=float(data.get("p2Kw", 0.0)),
-            pos_lte_kwh=float(data.get("posLtea3phsumKwh", 0.0)),
-            q3phsum_kvar=float(data.get("q3phsumKvar", 0.0)),
-            s3phsum_kva=float(data.get("s3phsumKva", 0.0)),
-            tot_pf_ratio=float(data.get("totPfRto", 0.0)),
-            v12_v=float(data.get("v12V", 0.0)),
-            v1n_v=float(data.get("v1nV", 0.0)),
-            v2n_v=float(data.get("v2nV", 0.0)),
+            power_3ph_kw=float_var(data, "p3phsumKw", 0.0),
+            voltage_3ph_v=float_var(data, "vln3phavgV", 0.0),
+            current_3ph_a=float_var(data, "i3phsumA", 0.0),
+            freq_hz=float_var(data, "freqHz", 0.0),
+            lte_3ph_kwh=float_var(data, "ltea3phsumKwh", 0.0),
+            ct_scale_factor=float_var(data, "ctSclFctr", 1.0),
+            i1_a=float_var(data, "i1A", 0.0),
+            i2_a=float_var(data, "i2A", 0.0),
+            neg_lte_kwh=float_var(data, "negLtea3phsumKwh", 0.0),
+            net_lte_kwh=float_var(data, "netLtea3phsumKwh", 0.0),
+            p1_kw=float_var(data, "p1Kw", 0.0),
+            p2_kw=float_var(data, "p2Kw", 0.0),
+            pos_lte_kwh=float_var(data, "posLtea3phsumKwh", 0.0),
+            q3phsum_kvar=float_var(data, "q3phsumKvar", 0.0),
+            s3phsum_kva=float_var(data, "s3phsumKva", 0.0),
+            tot_pf_ratio=float_var(data, "totPfRto", 0.0),
+            v12_v=float_var(data, "v12V", 0.0),
+            v1n_v=float_var(data, "v1nV", 0.0),
+            v2n_v=float_var(data, "v2nV", 0.0),
         )
