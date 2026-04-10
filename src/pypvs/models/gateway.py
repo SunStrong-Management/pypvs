@@ -32,9 +32,9 @@ class PVSGateway:
             pvs_type=pvs_model,
             hardware_version=f"{pvs_model} {hw_rev}",
             software_version=data.get("/sys/info/sw_rev"),
-            uptime_s=float(data.get("/sys/info/uptime")),
+            uptime_s=float(data.get("/sys/info/uptime", 0.0)),
             mac=data.get("/sys/info/lmac"),
-            ram_usage_percent=int(data.get("/sys/info/ram_usage")),
-            flash_usage_percent=int(data.get("/sys/info/flash_usage")),
-            cpu_usage_percent=int(data.get("/sys/info/cpu_usage")),
+            ram_usage_percent=int(data.get("/sys/info/ram_usage", 0)),
+            flash_usage_percent=int(data.get("/sys/info/flash_usage", 0)),
+            cpu_usage_percent=int(data.get("/sys/info/cpu_usage", 0)),
         )
