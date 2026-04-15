@@ -34,6 +34,7 @@ class PVSGatewayUpdater(PVSUpdater):
             "/sys/info/ram_usage": None,
             "/sys/info/flash_usage": None,
             "/sys/info/cpu_usage": None,
+            "/sys/pvs/flashwear_type_b": None,
         }
 
         # undate individual vars and not by match as the match takes a long time
