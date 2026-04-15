@@ -191,6 +191,11 @@ class PVS:
         """Update data."""
         if not self._supported_features:
             await self.probe()
+        elif not (self._supported_features & SupportedFeatures.INVERTERS):
+            # Inverters not yet discovered — devices may have been offline
+            # during initial probe. Re-probe to pick them up.
+            _LOGGER.debug("Inverters not yet discovered, re-probing")
+            await self.probe()
 
         data = PVSData()
         for updater in self._updaters:
