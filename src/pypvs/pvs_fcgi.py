@@ -123,7 +123,7 @@ class PVSFCGIClient:
         )
 
         # Proactively login if we don't have a session yet
-        if self.cookies is None and self.auth_user:
+        if self.cookies is None and self.auth_user and self.auth_password:
             await self.login_basic()
 
         # Try the request — may fail if session expired
