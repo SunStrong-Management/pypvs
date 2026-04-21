@@ -30,8 +30,16 @@ class PVSESSUpdater(PVSUpdater):
         try:
             ess_dict: list[dict[str, Any]] = await self._request_vars(VARS_MATCH_ESS)
         except Exception as e:
-            _LOGGER.error("Failed to request ESS vars: %s", e)
+            if not self._data_unavailable:
+                _LOGGER.warning("ESS data unavailable: %s", e)
+                self._data_unavailable = True
+            else:
+                _LOGGER.debug("ESS data still unavailable: %s", e)
             return
+
+        if self._data_unavailable:
+            _LOGGER.info("ESS data recovered")
+            self._data_unavailable = False
 
         try:
             # construct a list of ESS from the provided dictionary, drop all parent path

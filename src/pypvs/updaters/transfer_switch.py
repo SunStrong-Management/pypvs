@@ -36,8 +36,16 @@ class PVSTransferSwitchUpdater(PVSUpdater):
                 VARS_MATCH_TRANSFER_SWITCH
             )
         except Exception as e:
-            _LOGGER.error("Failed to request transfer switch vars: %s", e)
+            if not self._data_unavailable:
+                _LOGGER.warning("Transfer switch data unavailable: %s", e)
+                self._data_unavailable = True
+            else:
+                _LOGGER.debug("Transfer switch data still unavailable: %s", e)
             return
+
+        if self._data_unavailable:
+            _LOGGER.info("Transfer switch data recovered")
+            self._data_unavailable = False
 
         try:
             # construct a list of transfer switches from the provided dictionary,

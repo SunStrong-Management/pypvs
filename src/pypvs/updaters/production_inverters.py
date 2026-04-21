@@ -34,8 +34,16 @@ class PVSProductionInvertersUpdater(PVSUpdater):
                 VARS_MATCH_INVERTERS
             )
         except Exception as e:
-            _LOGGER.error("Failed to request inverter vars: %s", e)
+            if not self._data_unavailable:
+                _LOGGER.warning("Inverter data unavailable: %s", e)
+                self._data_unavailable = True
+            else:
+                _LOGGER.debug("Inverter data still unavailable: %s", e)
             return
+
+        if self._data_unavailable:
+            _LOGGER.info("Inverter data recovered")
+            self._data_unavailable = False
 
         try:
             # construct a list of inverters from the provided dictionary,

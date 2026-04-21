@@ -80,12 +80,12 @@ class PVS:
             )
             _LOGGER.debug(f"Received response: {response_data}")
             return response_data
-        except PVSFCGIClientPostError:
-            raise PVSCommunicationError("POST request failed")
-        except PVSFCGIClientLoginError:
-            raise PVSAuthenticationError("Login to the PVS failed")
-        except Exception:
-            raise PVSError("General error")
+        except PVSFCGIClientLoginError as err:
+            raise PVSAuthenticationError(f"Login to the PVS failed: {err}") from err
+        except PVSFCGIClientPostError as err:
+            raise PVSCommunicationError(f"POST request failed: {err}") from err
+        except Exception as err:
+            raise PVSError(f"Unexpected error communicating with PVS: {err}") from err
 
     async def getVarserverVar(self, varname):
         response_data = await self.getVarserver("/vars", params={"name": varname})
