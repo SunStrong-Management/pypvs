@@ -76,10 +76,6 @@ class PVSFCGIClient:
             _LOGGER.info(f"Login successful! with cookies: {self.cookies}")
 
     async def _post_internal(self, url, payload_str):
-        # Cookies seem to be added implicitly, so need to clear them for a new PVS
-        # https://docs.aiohttp.org/en/stable/client_advanced.html#cookie-jar
-        self.session.cookie_jar.clear()
-
         # TODO: Ignore certificate errors for now
         async with self.session.post(
             url, cookies=self.cookies, data=payload_str, ssl=False
@@ -126,11 +122,15 @@ class PVSFCGIClient:
             f"and cookies: {self.cookies}"
         )
 
-        # First try our luck if the session is still valid
+        # Proactively login if we don't have a session yet
+        if self.cookies is None and self.auth_user:
+            await self.login_basic()
+
+        # Try the request — may fail if session expired
         try:
             return await self._post_internal(url, payload_str)
         except PVSFCGIClientLoginError:
-            _LOGGER.warning("Unauthorized access. Retrying login...")
+            _LOGGER.debug("Session expired. Re-authenticating...")
 
         # Retry login to refresh the session cookies
         await self.login_basic()
