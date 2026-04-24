@@ -225,6 +225,7 @@ def test_gateway_from_varserver_omitted_numeric_fields():
     assert gw.ram_usage_percent == 0
     assert gw.flash_usage_percent == 0
     assert gw.cpu_usage_percent == 0
+    assert gw.flashwear_type_b_percent is None
 
 
 def test_gateway_from_varserver_full_sys_info_shape():
@@ -239,6 +240,28 @@ def test_gateway_from_varserver_full_sys_info_shape():
     assert gw.ram_usage_percent == 7
     assert gw.flash_usage_percent == 73
     assert gw.cpu_usage_percent == 6
+    assert gw.flashwear_type_b_percent is None
+
+
+def test_gateway_flashwear_normal_value():
+    """PVS6 with flashwear 0x05 → 50%."""
+    data = {**GATEWAY_SYS_INFO_ANON, "/sys/pvs/flashwear_type_b": "0x05"}
+    gw = PVSGateway.from_varserver(data)
+    assert gw.flashwear_type_b_percent == 50
+
+
+def test_gateway_flashwear_capped_at_100():
+    """Raw values above 0x0A are capped at 100%."""
+    data = {**GATEWAY_SYS_INFO_ANON, "/sys/pvs/flashwear_type_b": "0x0B"}
+    gw = PVSGateway.from_varserver(data)
+    assert gw.flashwear_type_b_percent == 100
+
+
+def test_gateway_flashwear_invalid_hex():
+    """Invalid hex string returns None."""
+    data = {**GATEWAY_SYS_INFO_ANON, "/sys/pvs/flashwear_type_b": "garbage"}
+    gw = PVSGateway.from_varserver(data)
+    assert gw.flashwear_type_b_percent is None
 
 
 def test_meter_from_varserver_production_and_net_shapes():

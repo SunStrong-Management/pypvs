@@ -25,6 +25,6 @@ def int_var(data: dict[str, Any], key: str, default: int = 0) -> int:
         return default
 
 
-def str_var(data: dict[str, Any], key: str, default: str = "") -> str:
+def str_var(data: dict[str, Any], key: str, default: str | None = "") -> str | None:
     v = data.get(key)
     return default if v is None else str(v)
