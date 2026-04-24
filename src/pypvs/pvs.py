@@ -1,5 +1,6 @@
 import base64
 import logging
+import time
 from typing import Callable
 
 from .const import VAR_UPTIME, SupportedFeatures
@@ -64,6 +65,11 @@ class PVS:
         self._supported_features: SupportedFeatures | None = None
         self._updaters: list[PVSUpdater] = []
         self.data: PVSData | None = None
+
+        # Exponential backoff for inverter re-probe attempts
+        self._inverter_reprobe_interval: int = 60  # seconds
+        self._inverter_last_reprobe: float | None = None
+        self._inverter_reprobe_max: int = 1800  # 30 minutes
 
         self.fcgi_client = PVSFCGIClient(
             session=session, auth_user=user, auth_password=password
@@ -193,9 +199,29 @@ class PVS:
             await self.probe()
         elif not (self._supported_features & SupportedFeatures.INVERTERS):
             # Inverters not yet discovered — devices may have been offline
-            # during initial probe. Re-probe to pick them up.
-            _LOGGER.debug("Inverters not yet discovered, re-probing")
-            await self.probe()
+            # during initial probe. Re-probe with exponential backoff.
+            now = time.monotonic()
+            if (
+                self._inverter_last_reprobe is None
+                or now - self._inverter_last_reprobe
+                >= self._inverter_reprobe_interval
+            ):
+                _LOGGER.debug(
+                    "Inverters not yet discovered, re-probing "
+                    "(next retry in %ds)",
+                    self._inverter_reprobe_interval,
+                )
+                self._inverter_last_reprobe = now
+                await self.probe()
+                if not (self._supported_features & SupportedFeatures.INVERTERS):
+                    self._inverter_reprobe_interval = min(
+                        self._inverter_reprobe_interval * 2,
+                        self._inverter_reprobe_max,
+                    )
+                else:
+                    # Found inverters — reset backoff state
+                    self._inverter_reprobe_interval = 60
+                    self._inverter_last_reprobe = None
 
         data = PVSData()
         for updater in self._updaters:
