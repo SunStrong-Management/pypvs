@@ -21,6 +21,7 @@ class PVSGateway:
     ram_usage_percent: int
     flash_usage_percent: int
     cpu_usage_percent: int
+    flashwear_type_b_percent: int | None
 
     @classmethod
     def from_varserver(cls, data: dict[str, Any]) -> PVSGateway:
@@ -28,6 +29,17 @@ class PVSGateway:
 
         pvs_model = str_var(data, "/sys/info/model").strip()
         hw_rev = str_var(data, "/sys/info/hwrev").strip()
+
+        # flashwear_type_b is reported as a hex string (e.g. "0x02")
+        # The decimal value is multiplied by 10 to get a percentage.
+        # Only available on PVS6; returns None when absent.
+        raw_flashwear = str_var(data, "/sys/pvs/flashwear_type_b", None)
+        flashwear: int | None = None
+        if raw_flashwear is not None:
+            try:
+                flashwear = min(int(raw_flashwear, 16) * 10, 100)
+            except (ValueError, TypeError):
+                flashwear = None
 
         return cls(
             model=str_var(data, "/sys/info/sys_type").strip(),
@@ -39,4 +51,5 @@ class PVSGateway:
             ram_usage_percent=int_var(data, "/sys/info/ram_usage", 0),
             flash_usage_percent=int_var(data, "/sys/info/flash_usage", 0),
             cpu_usage_percent=int_var(data, "/sys/info/cpu_usage", 0),
+            flashwear_type_b_percent=flashwear,
         )
