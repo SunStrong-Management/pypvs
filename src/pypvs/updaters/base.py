@@ -20,6 +20,7 @@ class PVSUpdater:
         self._request_vars = request_vars
         self._supported_features = SupportedFeatures(0)
         self._common_properties = common_properties
+        self._data_unavailable = False
 
     @abstractmethod
     async def probe(

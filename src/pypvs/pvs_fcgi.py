@@ -80,19 +80,33 @@ class PVSFCGIClient:
         async with self.session.post(
             url, cookies=self.cookies, data=payload_str, ssl=False
         ) as response:
-            await response.text()
-            # FIXME: The server returns 500 or 200 with empty response when
-            # the session is invalid
+            response_body = await response.text()
+
             if response.status == 200:
                 _LOGGER.debug("POST request successful!")
-                return await response.json()
-            elif response.status in [400, 401, 500]:
+                import json
+                return json.loads(response_body)
+            elif response.status in [401, 500]:
+                # Session expired or invalid — caller should re-authenticate
+                _LOGGER.debug(
+                    "PVS returned HTTP %s for %s — body: %s",
+                    response.status,
+                    url,
+                    response_body[:500],
+                )
                 raise PVSFCGIClientLoginError(
-                    "Unauthorized access (missing cookie). Retry login!"
+                    f"HTTP {response.status}: {response_body[:200]}"
                 )
             else:
+                # 400 or other status — not an auth issue, don't retry login
+                _LOGGER.debug(
+                    "PVS returned HTTP %s for %s — body: %s",
+                    response.status,
+                    url,
+                    response_body[:500],
+                )
                 raise PVSFCGIClientPostError(
-                    f"POST request failed with status code: {response.status}"
+                    f"HTTP {response.status}: {response_body[:200]}"
                 )
 
     async def execute_post_request(self, endpoint, params=None):

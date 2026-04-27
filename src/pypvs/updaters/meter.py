@@ -34,8 +34,16 @@ class PVSProductionMetersUpdater(PVSUpdater):
                 VARS_MATCH_METERS
             )
         except Exception as e:
-            _LOGGER.error("Failed to request meter vars: %s", e)
+            if not self._data_unavailable:
+                _LOGGER.warning("Meter data unavailable: %s", e)
+                self._data_unavailable = True
+            else:
+                _LOGGER.debug("Meter data still unavailable: %s", e)
             return
+
+        if self._data_unavailable:
+            _LOGGER.info("Meter data recovered")
+            self._data_unavailable = False
 
         try:
             # construct a list of meters from the provided dictionary,
