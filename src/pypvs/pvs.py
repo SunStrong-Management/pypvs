@@ -110,7 +110,7 @@ class PVS:
             value = response_data["values"][0]["value"]
             _LOGGER.debug(f"Received {varname}: {value}")
             return response_data["values"][0]["value"]
-        except KeyError:
+        except (KeyError, IndexError, TypeError):
             raise PVSDataFormatError(
                 "Cannot extract value from response {response_data}"
             )
@@ -126,7 +126,7 @@ class PVS:
                 value_dict[item["name"]] = item["value"]
             _LOGGER.debug(f"Received {len(value_dict)} values: {value_dict}")
             return value_dict
-        except KeyError:
+        except (KeyError, TypeError):
             raise PVSDataFormatError(
                 "Cannot construct dictionary from response {response_data}"
             )

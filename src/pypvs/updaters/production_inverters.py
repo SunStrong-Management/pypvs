@@ -74,4 +74,5 @@ class PVSProductionInvertersUpdater(PVSUpdater):
         pvs_data.inverters = {
             inverter["sn"]: PVSInverter.from_varserver(inverter)
             for inverter in inverters_data
+            if "sn" in inverter
         }
