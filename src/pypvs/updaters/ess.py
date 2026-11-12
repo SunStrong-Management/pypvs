@@ -63,4 +63,6 @@ class PVSESSUpdater(PVSUpdater):
             return
 
         pvs_data.raw[VARS_MATCH_ESS] = ess_data
-        pvs_data.ess = {ess["sn"]: PVSESS.from_varserver(ess) for ess in ess_data}
+        pvs_data.ess = {
+            ess["sn"]: PVSESS.from_varserver(ess) for ess in ess_data if "sn" in ess
+        }

@@ -71,5 +71,7 @@ class PVSProductionMetersUpdater(PVSUpdater):
 
         pvs_data.raw[VARS_MATCH_METERS] = meters_data
         pvs_data.meters = {
-            meter["sn"]: PVSMeter.from_varserver(meter) for meter in meters_data
+            meter["sn"]: PVSMeter.from_varserver(meter)
+            for meter in meters_data
+            if "sn" in meter
         }

@@ -76,4 +76,5 @@ class PVSTransferSwitchUpdater(PVSUpdater):
         pvs_data.transfer_switches = {
             switch["sn"]: PVSTransferSwitch.from_varserver(switch)
             for switch in transfer_switches_data
+            if "sn" in switch
         }
