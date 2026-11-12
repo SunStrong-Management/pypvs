@@ -36,6 +36,9 @@ where = ["src"]
 [tool.setuptools]
 include-package-data = true
 
+[tool.isort]
+profile = "black"
+
 [tool.setuptools_scm]
 # writes a file with __version__ so runtime can read it even from sdists
 write_to = "src/pypvs/_version.py"
