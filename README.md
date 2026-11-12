@@ -29,6 +29,12 @@ Install **PyPVS** directly from PyPI:
 ```bash
 pip install pypvs
 ```
+
+Some examples need extra packages (for example `zeroconf`), install them with:
+
+```bash
+pip install "pypvs[examples]"
+```
     
 ## Documentation
 
@@ -62,10 +68,10 @@ Prepare virtual environment
   python3 -m venv venv
 ```
 
-Install dependencies
+Install dependencies, including the ones needed by the examples
 
 ```bash
-  source venv/activate
+  source venv/bin/activate
   pip install -r requirements.txt
 ```
 

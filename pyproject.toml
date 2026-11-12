@@ -21,6 +21,11 @@ dependencies = [
     "aiohttp"
 ]
 
+[project.optional-dependencies]
+examples = [
+    "zeroconf"
+]
+
 [project.urls]
 Homepage = "https://github.com/SunStrong-Management/pypvs"
 Issues = "https://github.com/SunStrong-Management/pypvs/issues"
