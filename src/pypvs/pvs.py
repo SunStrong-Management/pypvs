@@ -203,12 +203,10 @@ class PVS:
             now = time.monotonic()
             if (
                 self._inverter_last_reprobe is None
-                or now - self._inverter_last_reprobe
-                >= self._inverter_reprobe_interval
+                or now - self._inverter_last_reprobe >= self._inverter_reprobe_interval
             ):
                 _LOGGER.debug(
-                    "Inverters not yet discovered, re-probing "
-                    "(next retry in %ds)",
+                    "Inverters not yet discovered, re-probing (next retry in %ds)",
                     self._inverter_reprobe_interval,
                 )
                 self._inverter_last_reprobe = now

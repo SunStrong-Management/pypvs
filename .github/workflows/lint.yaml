@@ -1,4 +1,4 @@
-on: push
+on: [push, pull_request]
 name: Lint Python
 
 jobs:
@@ -8,12 +8,9 @@ jobs:
     - uses: actions/checkout@v5
     - uses: actions/setup-python@v6
       with:
-        python-version: '3.12' 
-    # Install linters
-    - run: pip install black flake8 isort
-    # Run linters
+        python-version: '3.14'
+    # Pinned, so a new linter release cannot fail the build on its own
+    - run: pip install black==26.10.1 flake8==7.5.0 isort==9.0.2
     - run: flake8
-      continue-on-error: true
     - run: black --check .
-      continue-on-error: true
     - run: isort . --check

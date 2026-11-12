@@ -221,13 +221,13 @@ class PVSWebSocket:
 
                         # Start heartbeat monitor
                         async def monitor_heartbeat() -> None:
-                            nonlocal last_message_time
                             while True:
                                 await asyncio.sleep(30)
                                 elapsed = time.monotonic() - last_message_time
                                 if elapsed > stale_timeout:
                                     _LOGGER.warning(
-                                        "WebSocket stale (no messages for %.0fs), closing",
+                                        "WebSocket stale (no messages for %.0fs), "
+                                        "closing",
                                         elapsed,
                                     )
                                     await ws.close()

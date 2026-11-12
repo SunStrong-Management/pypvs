@@ -30,8 +30,7 @@ LIVEDATA_FIELD_DEFINITIONS: tuple[tuple[str, str, str, str], ...] = (
 
 # Mapping from varserver path to attribute name (derived from field definitions)
 _VAR_PATH_TO_ATTR: dict[str, str] = {
-    var_path: attr_name
-    for _, var_path, attr_name, _ in LIVEDATA_FIELD_DEFINITIONS
+    var_path: attr_name for _, var_path, attr_name, _ in LIVEDATA_FIELD_DEFINITIONS
 }
 
 
