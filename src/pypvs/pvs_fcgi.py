@@ -84,6 +84,7 @@ class PVSFCGIClient:
             if response.status == 200:
                 _LOGGER.debug("POST request successful!")
                 import json
+
                 return json.loads(response_body)
             elif response.status in [401, 500]:
                 # Session expired or invalid — caller should re-authenticate
